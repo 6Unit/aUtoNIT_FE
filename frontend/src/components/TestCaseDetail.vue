@@ -1,49 +1,44 @@
 <template>
   <div class="mt-0">
-    <!-- 상단 입력 영역 -->
-    <div class="d-flex align-items-center justify-content-between mb-3">
-      <div class="d-flex align-items-center gap-2">
-        <!-- 높이 맞춘 Badge -->
-        <span
-          class="badge fs-6 d-flex align-items-center justify-content-center"
-          style="
-            height: 40px;
-            width: 80px;
-            background-color: #b2eeb2;
-            color: #1b5e20;
-          "
-        >
-          1
-        </span>
+    <div class="d-flex align-items-center gap-2 mb-3">
+      <!-- 배지 -->
+      <span
+        class="badge fs-6 d-flex align-items-center justify-content-center"
+        style="
+          height: 40px;
+          width: 100px;
+          background-color: #b2eeb2;
+          color: #1b5e20;
+        "
+      >
+        {{ testCase.id }}
+      </span>
 
-        <!-- 인풋 -->
-        <input
-          type="text"
-          v-model="scenarioTitle"
-          class="form-control form-control-sm"
-          style="width: 800px; height: 40px"
-        />
+      <!-- 인풋 -->
+      <input
+        type="text"
+        v-model="scenarioTitle"
+        class="form-control form-control-sm"
+        style="height: 40px; max-width: 800px; flex-grow: 1"
+      />
 
-        <!-- Save 버튼 -->
-        <button
-          class="btn btn-outline-secondary btn-sm"
-          style="height: 40px; width: 80px"
-          @click="saveTitle"
-        >
-          Save
-        </button>
-      </div>
+      <!-- Save 버튼 -->
+      <button
+        class="btn btn-outline-secondary btn-sm"
+        style="height: 40px; width: 100px; flex-shrink: 0"
+        @click="saveTitle"
+      >
+        Save
+      </button>
 
-      <!-- 전체 실행 버튼 -->
-      <button class="btn btn-primary btn-sm" style="height: 40px">
+      <!-- 전체 실행 버튼: 같은 줄에 바로 붙임 -->
+      <button
+        class="btn btn-primary btn-sm"
+        style="height: 40px; width: 100px; flex-shrink: 0"
+      >
         전체 실행
       </button>
     </div>
-
-    <!-- 박스 내부 타이틀 -->
-    <!-- <div class="bg-light border px-3 py-2 mb-2 text-muted" style="opacity: 0.7">
-      {{ testCase.name }}
-    </div> -->
 
     <!-- 테이블 -->
     <div class="table-responsive mb-4">
@@ -65,7 +60,7 @@
             <td>
               <input type="checkbox" v-model="checked" />
             </td>
-            <td>1</td>
+            <td>{{ testCase.id }}</td>
             <td>{{ testCase.name }}</td>
             <td>filter by firstName</td>
             <td>-</td>
@@ -78,57 +73,94 @@
     </div>
 
     <!-- 코드 상태 -->
-    <div class="d-flex justify-content-between align-items-center mb-2">
-      <h6 class="fw-semibold mb-0">테스트 코드</h6>
-      <div class="d-flex align-items-center gap-2 small">
-        <span class="badge bg-success p-2">200 OK</span>
-        <span class="text-muted">795 ms</span>
-        <span class="text-muted">770 B</span>
+    <div class="bg-white border rounded p-3">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h6 class="fw-semibold mb-0">테스트 코드</h6>
+        <div class="d-flex align-items-center gap-3 small">
+          <span class="badge bg-success p-2">200 OK</span>
+          <span class="text-muted">795 ms</span>
+          <span class="text-muted">770 B</span>
+        </div>
       </div>
-    </div>
 
-    <!-- 탭 -->
-    <ul class="nav nav-tabs">
-      <li class="nav-item">
-        <a
-          class="nav-link"
-          :class="{ active: activeTab === 'yaml' }"
-          href="#"
-          @click.prevent="activeTab = 'yaml'"
-        >
-          Yaml
-        </a>
-      </li>
-      <li class="nav-item">
-        <a
-          class="nav-link"
-          :class="{ active: activeTab === 'ts' }"
-          href="#"
-          @click.prevent="activeTab = 'ts'"
-        >
-          Ts
-        </a>
-      </li>
-    </ul>
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a
+            class="nav-link text-secondary"
+            :class="{
+              active: activeTab === 'yaml',
+              'text-dark': activeTab === 'yaml',
+            }"
+            href="#"
+            @click.prevent="activeTab = 'yaml'"
+          >
+            Yaml
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link text-secondary"
+            :class="{
+              active: activeTab === 'ts',
+              'text-dark': activeTab === 'ts',
+            }"
+            href="#"
+            @click.prevent="activeTab = 'ts'"
+          >
+            Ts
+          </a>
+        </li>
+      </ul>
 
-    <!-- 코드 박스 -->
-    <div class="bg-white border rounded mt-2 p-3" style="font-size: 0.85rem">
-      <pre v-if="activeTab === 'yaml'" class="mb-0"><code>
-{
-  "args": {
-    "firstName": "foo1",
-    "lastName": "foo2"
-  },
-  "headers": {
-    "accept": "*/*"
-  },
-  "url": "https://postman-echo.com/get?firstName=foo1&lastName=foo2"
-}
-      </code></pre>
+      <!-- 탭 -->
 
-      <pre v-else-if="activeTab === 'ts'" class="mb-0"><code>
-<!-- Ts 코드는 아직 없습니다. -->
-      </code></pre>
+      <!-- 코드 박스 -->
+      <div class="bg-light border rounded mt-2 p-3" style="font-size: 0.85rem">
+        <pre v-if="activeTab === 'yaml'" class="mb-0"><code>
+tests:
+  - name: 로그인 성공 테스트
+    description: 올바른 아이디와 비밀번호로 로그인하면 메인 페이지로 이동해야 한다.
+    url: https://example.com/login
+    steps:
+      - action: fill
+        selector: '#username'
+        value: 'testuser'
+      - action: fill
+        selector: '#password'
+        value: 'testpass123'
+      - action: click
+        selector: 'button[type="submit"]'
+      - action: wait_for_selector
+        selector: 'text=환영합니다'
+
+    expect:
+      - type: visible
+        selector: 'text=환영합니다'
+
+  - name: 로그인 실패 테스트
+    description: 잘못된 비밀번호를 입력하면 오류 메시지가 나타나야 한다.
+    url: https://example.com/login
+    steps:
+      - action: fill
+        selector: '#username'
+        value: 'testuser'
+      - action: fill
+        selector: '#password'
+        value: 'wrongpass'
+      - action: click
+        selector: 'button[type="submit"]'
+
+    expect:
+      - type: visible
+        selector: 'text=아이디 또는 비밀번호가 잘못되었습니다.'
+
+
+         </code></pre>
+
+        <pre v-else-if="activeTab === 'ts'" class="mb-0"><code>
+   <!-- Ts 코드는 아직 없습니다. -->
+         </code></pre>
+      </div>
     </div>
   </div>
 </template>
