@@ -1,7 +1,5 @@
-/* ===== GenerationView Styles ===== */
-
 .generation-container {
-    padding: 2rem;
+    padding: 0; /* 기존 2rem에서 0으로 변경 */
     background-color: #f8fafc;
     min-height: 100vh;
   }
@@ -208,17 +206,19 @@
     margin-right: auto;
   }
   
-  /* Scenario View */
+  /* Scenario View - 여백 제거 */
   .scenario-view {
     background: white;
-    border-radius: 12px;
+    border-radius: 0; /* 모서리 둥글기 제거 */
     overflow: hidden;
-    border: 1px solid #e5e7eb;
+    border: none; /* 테두리 제거 */
+    margin: 0; /* 마진 제거 */
   }
   
   .scenario-layout {
     display: flex;
     min-height: 100vh;
+    margin: 0; /* 마진 제거 */
   }
   
   .scenario-sidebar {
@@ -226,11 +226,13 @@
     background: #f8fafc;
     border-right: 1px solid #e5e7eb;
     padding: 1rem;
+    margin: 0; /* 마진 제거 */
   }
   
   .scenario-content {
     flex: 1;
-    padding: 2rem;
+    padding: 1rem; /* 기존 2rem에서 1rem으로 축소 */
+    margin: 0; /* 마진 제거 */
   }
   
   .empty-state {
@@ -258,24 +260,34 @@
   /* Responsive Design */
   @media (max-width: 768px) {
     .generation-container {
-      padding: 1rem;
+      padding: 0; /* 모바일에서도 패딩 제거 */
+      margin-bottom: 0; /* 기존 70px에서 0으로 변경 */
     }
+    
     .card-header {
       flex-direction: column;
       gap: 1rem;
       align-items: flex-start;
     }
+    
     .file-item {
       padding: 0.75rem;
     }
+    
     .generate-section {
       padding: 1.5rem;
     }
+    
     .scenario-layout {
       flex-direction: column;
     }
+    
     .scenario-sidebar {
       width: 100%;
+    }
+    
+    .scenario-content {
+      padding: 0.5rem; /* 모바일에서 더 작은 패딩 */
     }
   }
   
@@ -283,16 +295,22 @@
     .files-grid {
       padding: 1rem;
     }
+    
     .file-item {
       gap: 0.75rem;
     }
+    
     .file-icon-wrapper {
       width: 2rem;
       height: 2rem;
     }
+    
     .file-icon-wrapper svg {
       width: 1rem;
       height: 1rem;
     }
+    
+    .scenario-content {
+      padding: 0.25rem; /* 작은 화면에서 최소 패딩 */
+    }
   }
-  
