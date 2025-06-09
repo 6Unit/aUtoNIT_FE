@@ -2,6 +2,15 @@
   <div class="d-flex flex-column" style="height: 100vh; overflow: hidden;">
     <!-- 스크롤 되는 시나리오 영역 -->
     <div class="pt-2" style="flex-grow: 1; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none;">
+      <!-- 🔵 테스트 페이지 버튼 -->
+      <div class="mb-2 px-2">
+        <div
+          class="d-flex align-items-center gap-2 py-2 px-3 bg-primary text-white rounded cursor-pointer"
+          @click="emit('select', { type: 'testPage' })"
+        >
+          🧪 테스트페이지
+        </div>
+      </div>
       <div
         v-for="scenario in scenarioList"
         :key="scenario.id"

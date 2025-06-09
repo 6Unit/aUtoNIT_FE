@@ -23,9 +23,9 @@
         <button
           class="btn btn-outline-secondary btn-sm"
           style="height: 40px; width: 100px"
-          @click="saveTitle"
+          @click="toggleEdit"
         >
-          Save
+          {{ isEditing ? "Save" : "Edit" }}
         </button>
       </div>
       <button
@@ -50,16 +50,39 @@
         <tbody class="text-center small">
           <tr>
             <td>{{ scenario.id }}</td>
-            <td>{{ scenario.name }}</td>
-            <td>{{ scenario.description || "-" }}</td>
+            <td>
+              <template v-if="isEditing">
+                <input
+                  v-model="editableName"
+                  class="form-control form-control-sm"
+                />
+              </template>
+              <template v-else>
+                {{ scenario.name }}
+              </template>
+            </td>
+            <td>
+              <template v-if="isEditing">
+                <input
+                  v-model="editableDesc"
+                  class="form-control form-control-sm"
+                />
+              </template>
+              <template v-else>
+                {{ scenario.description || "-" }}
+              </template>
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
 
     <!-- 테스트케이스 목록 테이블 -->
-    
-    <div v-if="props.shownMap && props.shownMap[props.scenario.id]" class="bg-white border rounded p-3 mt-4">
+
+    <div
+      v-if="props.shownMap && props.shownMap[props.scenario.id]"
+      class="bg-white border rounded p-3 mt-4"
+    >
       <div class="table-responsive">
         <h6 class="fw-semibold mb-3">테스트 케이스 목록</h6>
         <table class="table table-bordered table-sm align-middle">
@@ -108,9 +131,13 @@ const props = defineProps({
 
 const emit = defineEmits(["run-scenario"]);
 
-const scenarioTitle = ref("");    // 시나리오 이름 수정용
-const checkedItems = ref([]);     // 선택된 테스트케이스 ID 배열
-const allChecked = ref(false);    // 전체 선택 여부
+const scenarioTitle = ref(""); // 시나리오 이름 수정용
+const checkedItems = ref([]); // 선택된 테스트케이스 ID 배열
+const allChecked = ref(false); // 전체 선택 여부
+
+const isEditing = ref(false); // 편집 모드 여부
+const editableName = ref(""); // 편집 중인 시나리오명
+const editableDesc = ref(""); // 편집 중인 상세설명
 
 // 시나리오 바뀌면 타이틀 및 체크 초기화
 watch(
@@ -146,5 +173,19 @@ watch(checkedItems, (newVal) => {
 function handleExecuteClick() {
   emit("run-scenario", props.scenario.id);
 }
-</script>
 
+function toggleEdit() {
+  if (!isEditing.value) {
+    // 편집 시작
+    editableName.value = props.scenario.name;
+    editableDesc.value = props.scenario.description;
+    isEditing.value = true;
+  } else {
+    // 저장
+    props.scenario.name = editableName.value;
+    props.scenario.description = editableDesc.value;
+    scenarioTitle.value = editableName.value; // 상단 인풋창에도 반영
+    isEditing.value = false;
+  }
+}
+</script>
