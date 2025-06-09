@@ -30,6 +30,15 @@
     </RouterLink>
 
     <RouterLink 
+      to="/testpage" 
+      class="nav-item"
+      active-class="active"
+    >
+      <div class="nav-icon">🧪</div>
+      <div class="nav-text">TestPage</div>
+    </RouterLink>
+
+    <RouterLink 
       to="/report" 
       class="nav-item"
       active-class="active"
