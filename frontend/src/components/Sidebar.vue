@@ -1,33 +1,44 @@
 <template>
   <aside
-    class="d-flex flex-column align-items-center bg-white border-end py-4"
-    style="
-      width: 80px;
-      height: 100vh;
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 1000;
-    "
+    class="sidebar"
   >
-
-
-    <RouterLink to="/" class="text-center text-muted small mb-4 text-decoration-none">
-        <div>🏠</div>
-        <div>Home</div>
-      </RouterLink>
-
-    <RouterLink to="/upload" class="text-center text-muted small mb-4 text-decoration-none">
-      <div>📁</div>
-      <div>Upload</div>
+    <RouterLink 
+      to="/" 
+      class="nav-item"
+      exact-active-class="active"
+    >
+      <div class="nav-icon">🏠</div>
+      <div class="nav-text">Home</div>
     </RouterLink>
-    <RouterLink to="/generation" class="text-center text-muted small mb-4 text-decoration-none">
-      <div>🌍</div>
-      <div>Generation</div>
+
+    <RouterLink 
+      to="/upload" 
+      class="nav-item"
+      active-class="active"
+    >
+      <div class="nav-icon">📁</div>
+      <div class="nav-text">Upload</div>
     </RouterLink>
-    <RouterLink to="/report" class="text-center text-muted small mb-4 text-decoration-none">
-      <div>🖥️</div>
-      <div>Report</div>
+
+    <RouterLink 
+      to="/generation" 
+      class="nav-item"
+      active-class="active"
+    >
+      <div class="nav-icon">🌍</div>
+      <div class="nav-text">Generation</div>
+    </RouterLink>
+
+    <RouterLink 
+      to="/report" 
+      class="nav-item"
+      active-class="active"
+    >
+      <div class="nav-icon">🖥️</div>
+      <div class="nav-text">Report</div>
     </RouterLink>
   </aside>
 </template>
+<script setup lang="ts">
+import '../assets/styles/sidebar.css'
+</script>

@@ -2,28 +2,59 @@
   <div class="upload-container">
     <!-- Page Header -->
     <div class="page-header">
-      <h2>업로드</h2>
+      <h2>파일 업로드</h2>
+      <p class="header-subtitle">테스트 시나리오 생성을 위한 파일들을 업로드하세요</p>
     </div>
 
-    <!-- Upload Sections -->
-    <div class="upload-sections">
+    <!-- Upload Grid -->
+    <div class="upload-grid">
       <!-- Requirements Upload -->
-      <div class="upload-section">
-        <h3>요구사항명세서 업로드</h3>
+      <div class="upload-card">
+        <div class="card-header">
+          <div class="card-icon requirements">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+          </div>
+          <div class="card-title">
+            <h3>요구사항 명세서</h3>
+            <p>PDF, DOC, DOCX (최대 20MB)</p>
+          </div>
+        </div>
+        
         <div 
-          class="upload-area"
-          :class="{ 'drag-over': isDragOver.requirements }"
+          class="upload-zone"
+          :class="{ 'drag-over': isDragOver.requirements, 'has-file': files.requirements }"
           @click="() => triggerFileInput('requirements')"
           @dragover.prevent="handleDragOver('requirements')"
           @dragleave.prevent="handleDragLeave('requirements')"
           @drop.prevent="(e) => handleDrop(e, 'requirements')"
         >
-          <div class="upload-content">
-            <span class="upload-icon">📁</span>
-            <span class="upload-text">파일을 드래그하거나 클릭하여 업로드</span>
+          <div v-if="!files.requirements" class="upload-placeholder">
+            <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+            </svg>
+            <span>파일을 드래그하거나 클릭하여 업로드</span>
           </div>
-          <div class="upload-formats">지원 형식: PDF, DOC, DOCX (최대 20MB)</div>
+          
+          <div v-else class="file-preview">
+            <div class="file-info">
+              <svg class="file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              </svg>
+              <div class="file-details">
+                <span class="file-name">{{ files.requirements.name }}</span>
+                <span class="file-size">{{ formatFileSize(files.requirements.size) }}</span>
+              </div>
+            </div>
+            <button class="remove-btn" @click.stop="removeFile('requirements')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
         </div>
+        
         <input 
           ref="requirementsInput"
           type="file" 
@@ -31,30 +62,55 @@
           @change="(e) => handleFileSelect(e, 'requirements')"
           style="display: none"
         />
-        <div v-if="files.requirements" class="progress-line green"></div>
-        <div v-if="files.requirements" class="file-info">
-          <span class="file-name">{{ files.requirements.name }} ({{ formatFileSize(files.requirements.size) }})</span>
-          <button class="delete-btn" @click="removeFile('requirements')">✕</button>
-        </div>
       </div>
 
       <!-- Source File Upload -->
-      <div class="upload-section">
-        <h3>소스파일 업로드 (ZIP)</h3>
+      <div class="upload-card">
+        <div class="card-header">
+          <div class="card-icon source">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+            </svg>
+          </div>
+          <div class="card-title">
+            <h3>소스코드</h3>
+            <p>ZIP 파일 (최대 500MB)</p>
+          </div>
+        </div>
+        
         <div 
-          class="upload-area"
-          :class="{ 'drag-over': isDragOver.source }"
+          class="upload-zone"
+          :class="{ 'drag-over': isDragOver.source, 'has-file': files.source }"
           @click="() => triggerFileInput('source')"
           @dragover.prevent="handleDragOver('source')"
           @dragleave.prevent="handleDragLeave('source')"
           @drop.prevent="(e) => handleDrop(e, 'source')"
         >
-          <div class="upload-content">
-            <span class="upload-icon">📦</span>
-            <span class="upload-text">ZIP 파일을 드래그하거나 클릭하여 업로드</span>
+          <div v-if="!files.source" class="upload-placeholder">
+            <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+            </svg>
+            <span>ZIP 파일을 업로드하세요</span>
           </div>
-          <div class="upload-formats">지원 형식: ZIP (최대 500MB)</div>
+          
+          <div v-else class="file-preview">
+            <div class="file-info">
+              <svg class="file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+              </svg>
+              <div class="file-details">
+                <span class="file-name">{{ files.source.name }}</span>
+                <span class="file-size">{{ formatFileSize(files.source.size) }}</span>
+              </div>
+            </div>
+            <button class="remove-btn" @click.stop="removeFile('source')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
         </div>
+        
         <input 
           ref="sourceInput"
           type="file" 
@@ -62,29 +118,55 @@
           @change="(e) => handleFileSelect(e, 'source')"
           style="display: none"
         />
-        <div v-if="files.source" class="success-message">
-          <span class="success-text">✅ {{ files.source.name }} ({{ formatFileSize(files.source.size) }}) 업로드 완료</span>
-          <button class="delete-btn" @click="removeFile('source')">✕</button>
-        </div>
       </div>
 
       <!-- Validation File Upload -->
-      <div class="upload-section">
-        <h3>Validation 파일 업로드</h3>
+      <div class="upload-card">
+        <div class="card-header">
+          <div class="card-icon validation">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+            </svg>
+          </div>
+          <div class="card-title">
+            <h3>검증 데이터</h3>
+            <p>JSON, XML, TXT (최대 5MB)</p>
+          </div>
+        </div>
+        
         <div 
-          class="upload-area"
-          :class="{ 'drag-over': isDragOver.validation }"
+          class="upload-zone"
+          :class="{ 'drag-over': isDragOver.validation, 'has-file': files.validation }"
           @click="() => triggerFileInput('validation')"
           @dragover.prevent="handleDragOver('validation')"
           @dragleave.prevent="handleDragLeave('validation')"
           @drop.prevent="(e) => handleDrop(e, 'validation')"
         >
-          <div class="upload-content">
-            <span class="upload-icon">📋</span>
-            <span class="upload-text">검증 파일을 드래그하거나 클릭하여 업로드</span>
+          <div v-if="!files.validation" class="upload-placeholder">
+            <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+            </svg>
+            <span>검증 파일을 업로드하세요</span>
           </div>
-          <div class="upload-formats">지원 형식: JSON, XML, TXT (최대 5MB)</div>
+          
+          <div v-else class="file-preview">
+            <div class="file-info">
+              <svg class="file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+              </svg>
+              <div class="file-details">
+                <span class="file-name">{{ files.validation.name }}</span>
+                <span class="file-size">{{ formatFileSize(files.validation.size) }}</span>
+              </div>
+            </div>
+            <button class="remove-btn" @click.stop="removeFile('validation')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
         </div>
+        
         <input 
           ref="validationInput"
           type="file" 
@@ -92,48 +174,54 @@
           @change="(e) => handleFileSelect(e, 'validation')"
           style="display: none"
         />
-        <div v-if="files.validation" class="progress-line yellow"></div>
-        <div v-if="files.validation" class="file-info">
-          <span class="file-name">{{ files.validation.name }} ({{ formatFileSize(files.validation.size) }})</span>
-          <button class="delete-btn" @click="removeFile('validation')">✕</button>
-        </div>
       </div>
     </div>
 
     <!-- Action Buttons -->
     <div class="action-section">
+      <div class="upload-status">
+        <div class="status-item">
+          <div class="status-dot" :class="{ active: files.requirements }"></div>
+          <span>요구사항 명세서</span>
+        </div>
+        <div class="status-item">
+          <div class="status-dot" :class="{ active: files.source }"></div>
+          <span>소스코드</span>
+        </div>
+        <div class="status-item">
+          <div class="status-dot" :class="{ active: files.validation }"></div>
+          <span>검증 데이터</span>
+        </div>
+      </div>
+      
       <div class="action-buttons">
-        <button class="action-btn gray" @click="handleDeleteAll" :disabled="!hasAnyFile">전체 삭제</button>
-        <button class="action-btn green" @click="handleStartUpload" :disabled="!hasAnyFile">업로드 시작</button>
-        <button class="action-btn blue" @click="handleValidation" :disabled="!files.validation">검증 실행</button>
+        <button class="btn secondary" @click="handleDeleteAll" :disabled="!hasAnyFile">
+          전체 삭제
+        </button>
+        <button class="btn primary" @click="handleStartUpload" :disabled="!hasAnyFile">
+          업로드 완료
+        </button>
       </div>
-      <div class="status-info">
-        <div class="status-item">• 요구사항명세서: {{ getFileStatus('requirements') }}</div>
-        <div class="status-item">• 소스파일: {{ getFileStatus('source') }}</div>
-        <div class="status-item">• Validation 파일: {{ getFileStatus('validation') }}</div>
-      </div>
-    </div>
-
-    <!-- Info Message -->
-    <div class="info-message">
-      <span class="info-icon">💡</span>
-      <span class="info-text">모든 파일 업로드 완료 후 저장 버튼을 클릭하여 프로젝트를 저장하세요.</span>
     </div>
 
     <!-- Upload Progress Modal -->
     <div v-if="showUploadModal" class="modal-overlay" @click="closeUploadModal">
       <div class="modal-content" @click.stop>
-        <h3>파일 업로드 중...</h3>
-        <div class="upload-progress">
-          <div class="progress-bar">
-            <div class="progress-fill" :style="{ width: uploadProgress + '%' }"></div>
-          </div>
+        <div class="modal-header">
+          <h3>파일 업로드 중</h3>
           <div class="progress-text">{{ uploadProgress }}%</div>
         </div>
+        
+        <div class="progress-bar">
+          <div class="progress-fill" :style="{ width: uploadProgress + '%' }"></div>
+        </div>
+        
         <div class="uploading-files">
-          <div v-for="(file, key) in files" :key="key" class="uploading-file">
-            <span>{{ file.name }}</span>
-            <span class="upload-status">{{ uploadStatuses[key] }}</span>
+          <div v-for="(file, key) in files" :key="key" v-if="file" class="uploading-file">
+            <span class="file-name">{{ file.name }}</span>
+            <span class="upload-status" :class="uploadStatuses[key]">
+              {{ getStatusText(uploadStatuses[key]) }}
+            </span>
           </div>
         </div>
       </div>
@@ -143,6 +231,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue'
+import '../assets/styles/uploadview.css'
 
 // File storage
 const files = reactive({
@@ -158,13 +247,13 @@ const isDragOver = reactive({
   validation: false
 })
 
-// Upload modal state
+// oad modal state
 const showUploadModal = ref(false)
 const uploadProgress = ref(0)
 const uploadStatuses = reactive({
-  requirements: '대기중',
-  source: '대기중', 
-  validation: '대기중'
+  requirements: 'waiting',
+  source: 'waiting', 
+  validation: 'waiting'
 })
 
 // File input refs
@@ -186,12 +275,15 @@ const formatFileSize = (bytes: number): string => {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
 }
 
-// Get file status
-const getFileStatus = (type: string): string => {
-  if (files[type]) {
-    return '업로드 완료'
+// Get status text
+const getStatusText = (status: string): string => {
+  const statusMap = {
+    waiting: '대기중',
+    uploading: '업로드 중',
+    completed: '완료',
+    error: '오류'
   }
-  return '대기중'
+  return statusMap[status] || '대기중'
 }
 
 // Validate file type and size
@@ -281,7 +373,7 @@ const handleDrop = (event: DragEvent, type: string) => {
 // Remove file
 const removeFile = (type: string) => {
   files[type] = null
-  uploadStatuses[type] = '대기중'
+  uploadStatuses[type] = 'waiting'
   console.log(`${type} 파일 삭제됨`)
 }
 
@@ -293,9 +385,9 @@ const handleDeleteAll = () => {
     files.validation = null
     
     // Reset upload statuses
-    uploadStatuses.requirements = '대기중'
-    uploadStatuses.source = '대기중'
-    uploadStatuses.validation = '대기중'
+    uploadStatuses.requirements = 'waiting'
+    uploadStatuses.source = 'waiting'
+    uploadStatuses.validation = 'waiting'
     
     console.log('모든 파일이 삭제되었습니다.')
   }
@@ -305,13 +397,13 @@ const handleDeleteAll = () => {
 const simulateUpload = async (file: File, type: string): Promise<void> => {
   return new Promise((resolve) => {
     let progress = 0
-    uploadStatuses[type] = '업로드 중...'
+    uploadStatuses[type] = 'uploading'
     
     const interval = setInterval(() => {
       progress += Math.random() * 20
       if (progress >= 100) {
         progress = 100
-        uploadStatuses[type] = '완료'
+        uploadStatuses[type] = 'completed'
         clearInterval(interval)
         resolve()
       }
@@ -344,439 +436,8 @@ const handleStartUpload = async () => {
   }, 1000)
 }
 
-// Handle validation
-const handleValidation = () => {
-  if (!files.validation) {
-    alert('검증할 파일을 먼저 업로드해주세요.')
-    return
-  }
-
-  // Simulate validation process
-  const validationResult = Math.random() > 0.5
-  
-  setTimeout(() => {
-    if (validationResult) {
-      alert('✅ 파일 검증이 성공적으로 완료되었습니다!')
-    } else {
-      alert('❌ 파일 검증에 실패했습니다. 파일을 확인해주세요.')
-    }
-  }, 1500)
-  
-  console.log('검증 실행 중...')
-}
-
 // Close upload modal
 const closeUploadModal = () => {
   showUploadModal.value = false
 }
 </script>
-
-<style scoped>
-.upload-container {
-  width: 100%;
-  min-height: 100vh;
-  background-color: #f8f9fa;
-  padding: 30px;
-  box-sizing: border-box;
-  overflow-x: hidden;
-}
-
-/* Page Header */
-.page-header {
-  background: white;
-  border: 1px solid #e1e5e9;
-  border-radius: 8px;
-  padding: 15px 25px;
-  margin-bottom: 25px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.page-header h2 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: bold;
-  color: #4b5563;
-}
-
-/* Upload Sections */
-.upload-sections {
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-  margin-bottom: 30px;
-}
-
-.upload-section {
-  background: white;
-  border: 1px solid #e1e5e9;
-  border-radius: 12px;
-  padding: 25px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-}
-
-.upload-section:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.upload-section h3 {
-  margin: 0 0 20px 0;
-  font-size: 16px;
-  font-weight: bold;
-  color: #374151;
-}
-
-.upload-area {
-  border: 2px dashed #d1d5db;
-  border-radius: 8px;
-  background: #f9fafb;
-  padding: 30px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.upload-area:hover {
-  border-color: #3b82f6;
-  background: #eff6ff;
-  transform: translateY(-2px);
-}
-
-.upload-area.drag-over {
-  border-color: #10b981;
-  background: #ecfdf5;
-  transform: scale(1.02);
-}
-
-.upload-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.upload-icon {
-  font-size: 20px;
-}
-
-.upload-text {
-  font-size: 14px;
-  color: #6b7280;
-  font-weight: 500;
-}
-
-.upload-formats {
-  font-size: 12px;
-  color: #9ca3af;
-}
-
-/* Progress Lines */
-.progress-line {
-  height: 3px;
-  margin-top: 20px;
-  border-radius: 2px;
-  animation: pulse 2s infinite;
-}
-
-.progress-line.green {
-  background: linear-gradient(90deg, #10b981, #34d399);
-}
-
-.progress-line.yellow {
-  background: linear-gradient(90deg, #f59e0b, #fbbf24);
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
-}
-
-/* File Info */
-.file-info {
-  background: #f3f4f6;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  padding: 12px 16px;
-  margin-top: 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.file-name {
-  font-size: 13px;
-  color: #374151;
-  font-weight: 500;
-}
-
-/* Success Message */
-.success-message {
-  background: linear-gradient(135deg, #ecfdf5, #d1fae5);
-  border: 1px solid #10b981;
-  border-radius: 8px;
-  padding: 15px 20px;
-  margin-top: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  animation: slideIn 0.5s ease;
-}
-
-@keyframes slideIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.success-text {
-  font-size: 13px;
-  color: #065f46;
-  font-weight: 500;
-}
-
-.delete-btn {
-  background: none;
-  border: none;
-  color: #dc2626;
-  cursor: pointer;
-  font-size: 16px;
-  padding: 4px;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-}
-
-.delete-btn:hover {
-  background: #fee2e2;
-  color: #991b1b;
-  transform: scale(1.1);
-}
-
-/* Action Section */
-.action-section {
-  background: white;
-  border: 1px solid #e1e5e9;
-  border-radius: 12px;
-  padding: 25px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
-}
-
-.action-buttons {
-  display: flex;
-  gap: 15px;
-}
-
-.action-btn {
-  padding: 12px 20px;
-  border: none;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  color: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.action-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none !important;
-}
-
-.action-btn:not(:disabled):hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.action-btn.gray {
-  background: linear-gradient(135deg, #6b7280, #4b5563);
-}
-
-.action-btn.green {
-  background: linear-gradient(135deg, #10b981, #059669);
-}
-
-.action-btn.blue {
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
-}
-
-.status-info {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.status-item {
-  font-size: 13px;
-  color: #6b7280;
-  font-weight: 500;
-}
-
-/* Info Message */
-.info-message {
-  background: linear-gradient(135deg, #fef3c7, #fde68a);
-  border: 1px solid #f59e0b;
-  border-radius: 8px;
-  padding: 15px 25px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.info-icon {
-  font-size: 16px;
-}
-
-.info-text {
-  font-size: 13px;
-  color: #92400e;
-  font-weight: 500;
-}
-
-/* Upload Modal */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background: white;
-  padding: 30px;
-  border-radius: 12px;
-  width: 400px;
-  max-width: 90vw;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-}
-
-.modal-content h3 {
-  margin: 0 0 20px 0;
-  font-size: 18px;
-  font-weight: bold;
-  color: #374151;
-  text-align: center;
-}
-
-.upload-progress {
-  margin-bottom: 20px;
-}
-
-.progress-bar {
-  width: 100%;
-  height: 8px;
-  background: #e5e7eb;
-  border-radius: 4px;
-  overflow: hidden;
-  margin-bottom: 8px;
-}
-
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #3b82f6, #1d4ed8);
-  transition: width 0.3s ease;
-}
-
-.progress-text {
-  text-align: center;
-  font-size: 14px;
-  font-weight: 600;
-  color: #374151;
-}
-
-.uploading-files {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.uploading-file {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 12px;
-  background: #f9fafb;
-  border-radius: 6px;
-  font-size: 12px;
-}
-
-.upload-status {
-  color: #6b7280;
-  font-weight: 500;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .upload-container {
-    padding: 20px;
-  }
-  
-  .action-section {
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .action-buttons {
-    flex-wrap: wrap;
-    gap: 10px;
-    width: 100%;
-  }
-  
-  .action-btn {
-    flex: 1;
-    min-width: 120px;
-  }
-  
-  .upload-content {
-    flex-direction: column;
-    gap: 8px;
-  }
-  
-  .modal-content {
-    width: 350px;
-    padding: 25px;
-  }
-}
-
-@media (max-width: 480px) {
-  .upload-container {
-    padding: 15px;
-  }
-  
-  .upload-section {
-    padding: 20px;
-  }
-  
-  .upload-area {
-    padding: 20px;
-  }
-  
-  .action-buttons {
-    flex-direction: column;
-    width: 100%;
-  }
-  
-  .action-btn {
-    width: 100%;
-  }
-}
-
-/* Global body styles to prevent horizontal scroll */
-body {
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-}
-</style>

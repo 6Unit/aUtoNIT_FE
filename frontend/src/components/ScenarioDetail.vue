@@ -18,18 +18,22 @@
           type="text"
           v-model="scenarioTitle"
           class="form-control"
-          style="height: 40px; width: 800px "
+          style="height: 40px; width: 800px"
         />
         <button
           class="btn btn-outline-secondary btn-sm"
-          style="height: 40px; width: 100px "
+          style="height: 40px; width: 100px"
           @click="saveTitle"
         >
           Save
         </button>
       </div>
-      <button class="btn btn-primary btn-sm" style="height: 40px; width: 100px">
-        전체 실행
+      <button
+        class="btn btn-primary btn-sm"
+        style="height: 40px; width: 100px"
+        @click="handleExecuteClick"
+      >
+        실행
       </button>
     </div>
 
@@ -54,7 +58,8 @@
     </div>
 
     <!-- 테스트케이스 목록 테이블 -->
-    <div class="bg-white border rounded p-3 mt-4">
+    
+    <div v-if="props.shownMap && props.shownMap[props.scenario.id]" class="bg-white border rounded p-3 mt-4">
       <div class="table-responsive">
         <h6 class="fw-semibold mb-3">테스트 케이스 목록</h6>
         <table class="table table-bordered table-sm align-middle">
@@ -97,13 +102,17 @@ import { ref, watch } from "vue";
 
 const props = defineProps({
   scenario: Object,
+  showTestCases: Boolean,
+  shownMap: Object,
 });
 
-const scenarioTitle = ref("");
-const checkedItems = ref([]);
-const allChecked = ref(false);
+const emit = defineEmits(["run-scenario"]);
 
+const scenarioTitle = ref("");    // 시나리오 이름 수정용
+const checkedItems = ref([]);     // 선택된 테스트케이스 ID 배열
+const allChecked = ref(false);    // 전체 선택 여부
 
+// 시나리오 바뀌면 타이틀 및 체크 초기화
 watch(
   () => props.scenario,
   (newVal) => {
@@ -119,16 +128,22 @@ function saveTitle() {
   }
 }
 
+// 전체 체크 토글 함수
 function toggleAll() {
   if (allChecked.value) {
-    checkedItems.value = props.scenario?.testCases?.map(tc => tc.id) || [];
+    checkedItems.value = props.scenario?.testCases?.map((tc) => tc.id) || [];
   } else {
     checkedItems.value = [];
   }
 }
 
+// 개별 체크 변화 시 allChecked 갱신
 watch(checkedItems, (newVal) => {
   const total = props.scenario?.testCases?.length || 0;
   allChecked.value = newVal.length === total && total > 0;
 });
+
+function handleExecuteClick() {
+  emit("run-scenario", props.scenario.id);
+}
 </script>
