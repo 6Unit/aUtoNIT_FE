@@ -1,9 +1,12 @@
 <template>
   <div>
     <Sidebar />
-    <div style="margin-left: 80px;">
+    <div style="margin-left: 80px">
       <Header></Header>
-      <main class="bg-light" style="min-height: 100vh; width: 100%;">
+      <main
+        class="bg-light"
+        style="height: calc(100vh - 60px); overflow-y: auto"
+      >
         <RouterView />
       </main>
     </div>
@@ -11,6 +14,6 @@
 </template>
 
 <script setup>
-import Sidebar from './components/Sidebar.vue'
-import Header from './components/Header.vue'
+import Sidebar from "./components/Sidebar.vue";
+import Header from "./components/Header.vue";
 </script>

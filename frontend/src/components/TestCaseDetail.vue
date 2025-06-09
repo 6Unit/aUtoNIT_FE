@@ -112,8 +112,6 @@
         </li>
       </ul>
 
-      <!-- 탭 -->
-
       <!-- 코드 박스 -->
       <div class="bg-light border rounded mt-2 p-3" style="font-size: 0.85rem">
         <pre v-if="activeTab === 'yaml'" class="mb-0"><code>

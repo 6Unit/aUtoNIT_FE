@@ -3,11 +3,15 @@
     <!-- 좌측 시나리오 트리 -->
     <div
       class="border-end bg-light p-2"
-      style="width: 280px; min-height: 100vh;"
+      style="width: 280px; min-height: 100vh"
     >
       <ScenarioList
         :scenarioList="scenarioList"
+        :showTestCases="showTestCases"
+        :runScenarioId="runScenarioId"
+        :shownMap="shownTestCasesMap"
         @select="handleSelectTestCase"
+        @generate="handleRunAllScenarios"     
       />
     </div>
 
@@ -17,6 +21,9 @@
       <ScenarioDetail
         v-else-if="selectedScenario"
         :scenario="selectedScenario"
+        :shownMap="shownTestCasesMap"
+        :showTestCases="showTestCases"
+        @run-scenario="handleRunScenario"
       />
       <div v-else>
         <p class="text-muted">시나리오 또는 테스트 케이스를 선택하세요.</p>
@@ -33,12 +40,16 @@ import ScenarioDetail from "../components/ScenarioDetail.vue";
 
 const selectedScenario = ref(null);
 const selectedTestCase = ref(null);
+const showTestCases = ref(false);
+const runScenarioId = ref(null);
+const shownTestCasesMap = ref({});
 
 const scenarioList = ref([
   {
     id: 1,
     name: "회원가입 시나리오",
-    description: "사용자가 회원가입 폼을 작성하고 계정을 생성하는 전체 흐름을 검증합니다.",
+    description:
+      "사용자가 회원가입 폼을 작성하고 계정을 생성하는 전체 흐름을 검증합니다.",
     testCases: [
       { id: 1, name: "이메일 형식 확인" },
       { id: 2, name: "비밀번호 유효성 검사" },
@@ -82,7 +93,6 @@ const scenarioList = ref([
   },
 ]);
 
-
 function handleSelectTestCase(item) {
   if ("testCases" in item) {
     // 시나리오가 선택된 경우
@@ -93,5 +103,22 @@ function handleSelectTestCase(item) {
     selectedTestCase.value = item;
     selectedScenario.value = null;
   }
+}
+
+// 좌측 리스트 다 보이고, 우측 목록도 함께 보임
+function handleRunAllScenarios() {
+  // 모든 시나리오 id에 대해 shownMap[id] = true 설정
+  scenarioList.value.forEach((scenario) => {
+    shownTestCasesMap.value[scenario.id] = true;
+  });
+  // 우측 상세 뷰가 시나리오일 경우, 그 안의 테스트케이스도 보이게 함
+  if (selectedScenario.value) {
+    showTestCases.value = true;
+  }
+}
+
+function handleRunScenario(id) {
+  shownTestCasesMap.value[id] = true;
+  runScenarioId.value = id;
 }
 </script>
