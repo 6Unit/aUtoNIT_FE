@@ -117,6 +117,11 @@
         </table>
       </div>
     </div>
+    <div class="d-flex justify-content-end mt-3">
+      <button class="btn btn-success btn-md" @click="handleGenerateCode">
+        코드 생성
+      </button>
+    </div>
   </div>
 </template>
 
@@ -188,4 +193,36 @@ function toggleEdit() {
     isEditing.value = false;
   }
 }
+
+// ✅ 여기에 이 함수 추가
+async function handleGenerateCode() {
+  const selectedTestCases = props.scenario.testCases.filter(tc =>
+    checkedItems.value.includes(tc.id)
+  );
+
+  for (const tc of selectedTestCases) {
+    const code = await generateCodeForTestCase(tc);
+    tc.generatedCode = code;
+  }
+}
+
+// ✅ 그리고 아래 코드도 함께 추가
+async function generateCodeForTestCase(testCase) {
+  // 나중에 여기를 백엔드 API 호출로 바꾸면 됨
+  return {
+    yaml: `
+tests:
+  - name: ${testCase.name} 자동 생성 테스트
+    steps:
+      - action: click
+        selector: '#example'
+    expect:
+      - type: visible
+        selector: 'text=성공'
+    `,
+    ts: `// ${testCase.name} 테스트에 대한 TS 코드`
+  };
+}
+
+
 </script>

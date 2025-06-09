@@ -26,17 +26,17 @@
       <button
         class="btn btn-outline-secondary btn-sm"
         style="height: 40px; width: 100px; flex-shrink: 0"
-        @click="saveTitle"
+        @click="toggleEdit"
       >
-        Save
+        {{ isEditing ? "Save" : "Edit" }}
       </button>
 
-      <!-- 전체 실행 버튼: 같은 줄에 바로 붙임 -->
       <button
         class="btn btn-primary btn-sm"
         style="height: 40px; width: 100px; flex-shrink: 0"
+        @click="runTestCase"
       >
-        전체 실행
+        실행
       </button>
     </div>
 
@@ -57,14 +57,52 @@
         </thead>
         <tbody>
           <tr class="text-center small">
-            <td>
-              <input type="checkbox" v-model="checked" />
-            </td>
+            <td><input type="checkbox" v-model="checked" /></td>
             <td>{{ testCase.id }}</td>
-            <td>{{ testCase.name }}</td>
-            <td>filter by firstName</td>
-            <td>-</td>
-            <td>-</td>
+            <td>
+              <template v-if="isEditing">
+                <input
+                  v-model="editedName"
+                  class="form-control form-control-sm"
+                />
+              </template>
+              <template v-else>
+                {{ testCase.name }}
+              </template>
+            </td>
+            <td>
+              <template v-if="isEditing">
+                <input
+                  v-model="editedPreCall"
+                  class="form-control form-control-sm"
+                />
+              </template>
+              <template v-else>
+                {{ testCase.preCall || "-" }}
+              </template>
+            </td>
+            <td>
+              <template v-if="isEditing">
+                <input
+                  v-model="editedInput"
+                  class="form-control form-control-sm"
+                />
+              </template>
+              <template v-else>
+                {{ testCase.input || "-" }}
+              </template>
+            </td>
+            <td>
+              <template v-if="isEditing">
+                <input
+                  v-model="editedExpect"
+                  class="form-control form-control-sm"
+                />
+              </template>
+              <template v-else>
+                {{ testCase.expect || "-" }}
+              </template>
+            </td>
             <td>-</td>
             <td>-</td>
           </tr>
@@ -83,80 +121,43 @@
         </div>
       </div>
 
-      <ul class="nav nav-tabs">
-        <li class="nav-item">
-          <a
-            class="nav-link text-secondary"
-            :class="{
-              active: activeTab === 'yaml',
-              'text-dark': activeTab === 'yaml',
-            }"
-            href="#"
-            @click.prevent="activeTab = 'yaml'"
-          >
-            Yaml
-          </a>
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link text-secondary"
-            :class="{
-              active: activeTab === 'ts',
-              'text-dark': activeTab === 'ts',
-            }"
-            href="#"
-            @click.prevent="activeTab = 'ts'"
-          >
-            Ts
-          </a>
-        </li>
-      </ul>
+      <div class="btn-group mb-2 mt-4" role="group">
+        <button
+          type="button"
+          class="btn btn-sm"
+          :class="[
+            activeTab === 'yaml'
+              ? 'bg-secondary-subtle border border-border text-dark'
+              : 'bg-white border border-border  text-dark',
+          ]"
+          style="min-width: 80px"
+          @click="activeTab = 'yaml'"
+        >
+          Yaml
+        </button>
+        <button
+          type="button"
+          class="btn btn-sm"
+          :class="[
+            activeTab === 'ts'
+              ? 'bg-secondary-subtle border border-border  text-dark'
+              : 'bg-white border border-border  text-dark',
+          ]"
+          style="min-width: 80px"
+          @click="activeTab = 'ts'"
+        >
+          Ts
+        </button>
+      </div>
 
       <!-- 코드 박스 -->
       <div class="bg-light border rounded mt-2 p-3" style="font-size: 0.85rem">
         <pre v-if="activeTab === 'yaml'" class="mb-0"><code>
-tests:
-  - name: 로그인 성공 테스트
-    description: 올바른 아이디와 비밀번호로 로그인하면 메인 페이지로 이동해야 한다.
-    url: https://example.com/login
-    steps:
-      - action: fill
-        selector: '#username'
-        value: 'testuser'
-      - action: fill
-        selector: '#password'
-        value: 'testpass123'
-      - action: click
-        selector: 'button[type="submit"]'
-      - action: wait_for_selector
-        selector: 'text=환영합니다'
-
-    expect:
-      - type: visible
-        selector: 'text=환영합니다'
-
-  - name: 로그인 실패 테스트
-    description: 잘못된 비밀번호를 입력하면 오류 메시지가 나타나야 한다.
-    url: https://example.com/login
-    steps:
-      - action: fill
-        selector: '#username'
-        value: 'testuser'
-      - action: fill
-        selector: '#password'
-        value: 'wrongpass'
-      - action: click
-        selector: 'button[type="submit"]'
-
-    expect:
-      - type: visible
-        selector: 'text=아이디 또는 비밀번호가 잘못되었습니다.'
-
-
+          {{ testCase.generatedCode?.yaml || '⛔️ 코드가 아직 생성되지 않았습니다.' }}
          </code></pre>
 
         <pre v-else-if="activeTab === 'ts'" class="mb-0"><code>
-   <!-- Ts 코드는 아직 없습니다. -->
+          {{ testCase.generatedCode?.ts || '// ⛔️ 코드가 아직 없습니다.' }}
          </code></pre>
       </div>
     </div>
@@ -169,6 +170,12 @@ import { ref, watch } from "vue";
 const scenarioTitle = ref("");
 const checked = ref(false);
 const activeTab = ref("yaml");
+
+const isEditing = ref(false);
+const editedName = ref("");
+const editedPreCall = ref("");
+const editedInput = ref("");
+const editedExpect = ref("");
 
 const props = defineProps({
   testCase: {
@@ -193,4 +200,41 @@ function saveTitle() {
     props.testCase.name = scenarioTitle.value;
   }
 }
+
+function toggleEdit() {
+  if (!isEditing.value) {
+    // Edit 모드 진입
+    editedName.value = props.testCase.name || "";
+    editedPreCall.value = props.testCase.preCall || "";
+    editedInput.value = props.testCase.input || "";
+    editedExpect.value = props.testCase.expect || "";
+    isEditing.value = true;
+  } else {
+    // 저장
+    props.testCase.name = editedName.value;
+    props.testCase.preCall = editedPreCall.value;
+    props.testCase.input = editedInput.value;
+    props.testCase.expect = editedExpect.value;
+    scenarioTitle.value = editedName.value;
+    isEditing.value = false;
+  }
+}
+
+function runTestCase() {
+  // 간단한 더미 코드 생성 로직
+  props.testCase.generatedCode = {
+    yaml: `
+tests:
+  - name: ${props.testCase.name} 실행 테스트
+    steps:
+      - action: click
+        selector: '#run-button'
+    expect:
+      - type: visible
+        selector: 'text=테스트 완료'
+    `,
+    ts: `// ${props.testCase.name} 실행에 대한 TS 테스트 코드`
+  };
+}
+
 </script>
