@@ -94,14 +94,27 @@
       <div class="scenario-layout">
         <!-- 좌측 시나리오 트리 -->
         <div class="scenario-sidebar">
-          <ScenarioList :scenarioList="scenarioList" @select="handleSelectTestCase" />
+          <ScenarioList
+            :scenarioList="scenarioList"
+            :showTestCases="showTestCases"
+            :runScenarioId="runScenarioId"
+            :shownMap="shownTestCasesMap"
+            @select="handleSelectTestCase"
+            @generate="handleRunAllScenarios"
+          />
         </div>
 
         <!-- 우측 상세 영역 -->
         <div class="scenario-content">
           <TestDetail v-if="isTestPageActive" :scenarioList="scenarioList" @run-tests="handleRunTests" />
           <TestCaseDetail v-else-if="selectedTestCase" :testCase="selectedTestCase" />
-          <ScenarioDetail v-else-if="selectedScenario" :scenario="selectedScenario" />
+          <ScenarioDetail
+            v-else-if="selectedScenario"
+            :scenario="selectedScenario"
+            :shownMap="shownTestCasesMap"
+            :showTestCases="showTestCases"
+            @run-scenario="handleRunScenario"
+          />
           <div v-else class="empty-state">
             <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
@@ -121,8 +134,6 @@ import TestCaseDetail from '../components/TestCaseDetail.vue';
 import ScenarioDetail from '../components/ScenarioDetail.vue';
 import TestDetail from '../components/TestDetail.vue'
 import '../assets/styles/generationview.css'
-
-
 
 const isScenarioGenerated = ref(false)
 const showGenerationForm = ref(true)
@@ -206,7 +217,11 @@ const scenarioList = ref([
 
 const selectedScenario = ref(null);
 const selectedTestCase = ref(null);
-const isTestPageActive = ref(false)
+const isTestPageActive = ref(false);
+const showTestCases = ref(false);
+const runScenarioId = ref(null);
+const shownTestCasesMap = ref({});
+
 
 function handleSelectTestCase(item) {
   if (item.type === 'testPage') {
@@ -223,6 +238,24 @@ function handleSelectTestCase(item) {
     isTestPageActive.value = false;
   }
 }
+
+// 좌측 리스트 다 보이고, 우측 목록도 함께 보임
+function handleRunAllScenarios() {
+  // 모든 시나리오 id에 대해 shownMap[id] = true 설정
+  scenarioList.value.forEach((scenario) => {
+    shownTestCasesMap.value[scenario.id] = true;
+  });
+  // 우측 상세 뷰가 시나리오일 경우, 그 안의 테스트케이스도 보이게 함
+  if (selectedScenario.value) {
+    showTestCases.value = true;
+  }
+}
+
+function handleRunScenario(id) {
+  shownTestCasesMap.value[id] = true;
+  runScenarioId.value = id;
+}
+
 function handleRunTests(testcases) {
   console.log("✅ 선택된 테스트케이스 실행:", testcases)
   // 여기서 API 호출 등 처리 예정
