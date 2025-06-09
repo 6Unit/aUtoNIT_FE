@@ -1,4 +1,12 @@
 <template>
+  <div class="mb-3 px-2">
+    <div
+      class="d-flex align-items-center gap-2 py-2 px-2 bg-primary text-white rounded cursor-pointer"
+      @click="selectTestPage"
+    >
+      <span>🧪 테스트페이지</span>
+    </div>
+  </div>
   <div class="pt-2">
     <div
       v-for="scenario in scenarioList"
@@ -78,5 +86,8 @@ function selectTestCase(tc) {
 function handleScenarioClick(scenario) {
   toggle(scenario.id); // 토글 열고 닫기
   emit("select", scenario); // scenario-detail 뷰 열기 위해 emit
+}
+function selectTestPage() {
+  emit("select", { type: "testPage" });
 }
 </script>

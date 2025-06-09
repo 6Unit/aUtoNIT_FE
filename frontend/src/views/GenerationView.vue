@@ -2,38 +2,31 @@
   <div class="generation-container">
     <!-- 업로드된 파일 요약 + 시나리오 생성 버튼 -->
     <div v-if="showGenerationForm" class="generation-form">
-      <!-- 헤더 섹션 -->
-      <div class="header-section">
-        <div class="header-content">
-          <div class="icon-wrapper">
-            <svg class="header-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-            </svg>
-          </div>
-          <div>
-            <h1 class="header-title">테스트 시나리오 생성</h1>
-            <p class="header-subtitle">업로드된 파일을 기반으로 자동 테스트 시나리오를 생성합니다</p>
-          </div>
-        </div>
+      <!-- 페이지 헤더 -->
+      <div class="page-header">
+        <h2>테스트 시나리오 생성</h2>
+        <p class="header-subtitle">업로드된 파일을 기반으로 자동 테스트 시나리오를 생성합니다</p>
       </div>
 
       <!-- 업로드된 파일 카드 -->
       <div class="files-card">
         <div class="card-header">
           <div class="card-title-wrapper">
-            <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h2a2 2 0 012 2v2H8V5z"></path>
-            </svg>
-            <h2 class="card-title">업로드된 파일 목록</h2>
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h2a2 2 0 012 2v2H8V5z"></path>
+              </svg>
+            </div>
+            <h3>업로드된 파일 목록</h3>
           </div>
           <div class="file-count-badge">3개 파일</div>
         </div>
 
-        <div class="files-list">
+        <div class="files-grid">
           <div class="file-item">
-            <div class="file-icon-wrapper requirement">
-              <svg class="file-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="file-icon-wrapper requirements">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
               </svg>
             </div>
@@ -42,7 +35,7 @@
               <div class="file-type">요구사항 정의서</div>
             </div>
             <div class="file-status">
-              <svg class="status-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
               </svg>
             </div>
@@ -50,7 +43,7 @@
 
           <div class="file-item">
             <div class="file-icon-wrapper source">
-              <svg class="file-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
               </svg>
             </div>
@@ -59,7 +52,7 @@
               <div class="file-type">소스코드 파일</div>
             </div>
             <div class="file-status">
-              <svg class="status-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
               </svg>
             </div>
@@ -67,7 +60,7 @@
 
           <div class="file-item">
             <div class="file-icon-wrapper validation">
-              <svg class="file-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
               </svg>
             </div>
@@ -76,7 +69,7 @@
               <div class="file-type">검증 데이터 파일</div>
             </div>
             <div class="file-status">
-              <svg class="status-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
               </svg>
             </div>
@@ -87,12 +80,12 @@
       <!-- 시나리오 생성 버튼 -->
       <div class="generate-section">
         <button @click="generateScenario" class="generate-button">
-          <svg class="button-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
           </svg>
           <span>시나리오 자동 생성</span>
         </button>
-        <p class="generate-description">AI가 업로드된 파일을 기반으로 분석하여 최적화된 테스트 시나리오를 생성합니다</p>
+        <p class="generate-description">AI가 업로드된 파일을 분석하여 최적화된 테스트 시나리오를 생성합니다</p>
       </div>
     </div>
 
@@ -106,10 +99,11 @@
 
         <!-- 우측 상세 영역 -->
         <div class="scenario-content">
-          <TestCaseDetail v-if="selectedTestCase" :testCase="selectedTestCase" />
+          <TestDetail v-if="isTestPageActive" :scenarioList="scenarioList" @run-tests="handleRunTests" />
+          <TestCaseDetail v-else-if="selectedTestCase" :testCase="selectedTestCase" />
           <ScenarioDetail v-else-if="selectedScenario" :scenario="selectedScenario" />
           <div v-else class="empty-state">
-            <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
             </svg>
             <p class="empty-text">시나리오 또는 테스트 케이스를 선택하세요</p>
@@ -125,6 +119,7 @@ import { ref, onMounted } from 'vue'
 import ScenarioList from '../components/ScenarioList.vue';
 import TestCaseDetail from '../components/TestCaseDetail.vue';
 import ScenarioDetail from '../components/ScenarioDetail.vue';
+import TestDetail from '../components/TestDetail.vue'
 
 const isScenarioGenerated = ref(false)
 const showGenerationForm = ref(true)
@@ -208,94 +203,75 @@ const scenarioList = ref([
 
 const selectedScenario = ref(null);
 const selectedTestCase = ref(null);
+const isTestPageActive = ref(false)
 
 function handleSelectTestCase(item) {
-  if ("testCases" in item) {
+  if (item.type === 'testPage') {
+    selectedScenario.value = null;
+    selectedTestCase.value = null;
+    isTestPageActive.value = true;
+  } else if ("testCases" in item) {
     selectedScenario.value = item;
     selectedTestCase.value = null;
+    isTestPageActive.value = false;
   } else {
     selectedTestCase.value = item;
     selectedScenario.value = null;
+    isTestPageActive.value = false;
   }
+}
+function handleRunTests(testcases) {
+  console.log("✅ 선택된 테스트케이스 실행:", testcases)
+  // 여기서 API 호출 등 처리 예정
 }
 </script>
 
 <style scoped>
 .generation-container {
-  min-height: 100vh;
-  background: #f8fafc;
   padding: 2rem;
+  background-color: #f8fafc;
+  min-height: 100vh;
 }
 
 .generation-form {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
-  animation: fadeInUp 0.6s ease-out;
 }
 
-/* 헤더 섹션 */
-.header-section {
+/* Page Header */
+.page-header {
+  margin-bottom: 2rem;
   text-align: center;
-  margin-bottom: 3rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 3rem 2rem;
-  border-radius: 24px;
-  box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
 }
 
-.header-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-}
-
-.icon-wrapper {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  padding: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.header-icon {
-  width: 3rem;
-  height: 3rem;
-  color: white;
-}
-
-.header-title {
-  font-size: 2.5rem;
+.page-header h2 {
+  font-size: 1.875rem;
   font-weight: 700;
-  color: white;
-  margin: 0;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  color: #1f2937;
+  margin: 0 0 0.5rem 0;
 }
 
 .header-subtitle {
-  font-size: 1.1rem;
-  color: rgba(255, 255, 255, 0.9);
-  margin: 0.5rem 0 0 0;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  color: #6b7280;
+  font-size: 1rem;
+  margin: 0;
 }
 
-/* 파일 카드 */
+/* Files Card */
 .files-card {
   background: white;
-  border-radius: 24px;
-  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
   margin-bottom: 2rem;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e2e8f0;
+  overflow: hidden;
 }
 
 .card-header {
   display: flex;
-  justify-content: between;
+  justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid #f0f2f5;
+  padding: 1.5rem;
+  border-bottom: 1px solid #f3f4f6;
 }
 
 .card-title-wrapper {
@@ -307,26 +283,28 @@ function handleSelectTestCase(item) {
 .card-icon {
   width: 1.5rem;
   height: 1.5rem;
-  color: #667eea;
+  color: #6b7280;
 }
 
-.card-title {
-  font-size: 1.5rem;
+.card-header h3 {
+  font-size: 1.125rem;
   font-weight: 600;
-  color: #2d3748;
+  color: #1f2937;
   margin: 0;
 }
 
 .file-count-badge {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: #3b82f6;
   color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.875rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
   font-weight: 500;
 }
 
-.files-list {
+/* Files Grid */
+.files-grid {
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -336,129 +314,133 @@ function handleSelectTestCase(item) {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1.25rem;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
-  transition: all 0.3s ease;
+  padding: 1rem;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 1px solid #f3f4f6;
+  transition: all 0.2s ease;
 }
 
 .file-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  background: #f3f4f6;
+  border-color: #e5e7eb;
 }
 
 .file-icon-wrapper {
-  width: 3rem;
-  height: 3rem;
-  border-radius: 12px;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
+  flex-shrink: 0;
 }
 
-.file-icon-wrapper.requirement {
-  background: linear-gradient(135deg, #4299e1, #3182ce);
+.file-icon-wrapper svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: white;
+}
+
+.file-icon-wrapper.requirements {
+  background: #3b82f6;
 }
 
 .file-icon-wrapper.source {
-  background: linear-gradient(135deg, #48bb78, #38a169);
+  background: #10b981;
 }
 
 .file-icon-wrapper.validation {
-  background: linear-gradient(135deg, #ed8936, #dd6b20);
-}
-
-.file-icon {
-  width: 1.5rem;
-  height: 1.5rem;
-  color: white;
+  background: #f59e0b;
 }
 
 .file-info {
   flex: 1;
+  min-width: 0;
 }
 
 .file-name {
-  font-weight: 600;
-  color: #2d3748;
-  font-size: 1rem;
+  font-weight: 500;
+  color: #1f2937;
+  font-size: 0.875rem;
   margin-bottom: 0.25rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .file-type {
-  color: #718096;
-  font-size: 0.875rem;
+  color: #6b7280;
+  font-size: 0.75rem;
 }
 
 .file-status {
-  width: 2rem;
-  height: 2rem;
-  background: #48bb78;
+  width: 1.5rem;
+  height: 1.5rem;
+  background: #10b981;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
-.status-icon {
-  width: 1rem;
-  height: 1rem;
+.file-status svg {
+  width: 0.875rem;
+  height: 0.875rem;
   color: white;
 }
 
-/* 생성 버튼 섹션 */
+/* Generate Section */
 .generate-section {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  padding: 2rem;
   text-align: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 2.5rem;
-  border-radius: 24px;
-  box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
 }
 
 .generate-button {
-  background: white;
-  color: #667eea;
+  background: #3b82f6;
+  color: white;
   border: none;
   padding: 1rem 2rem;
-  border-radius: 16px;
-  font-size: 1.125rem;
+  border-radius: 8px;
+  font-size: 1rem;
   font-weight: 600;
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.2);
+  transition: all 0.2s ease;
+  margin-bottom: 0.75rem;
 }
 
 .generate-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 32px rgba(255, 255, 255, 0.3);
-  background: #f7fafc;
-  color: #5a67d8;
+  background: #2563eb;
+  transform: translateY(-1px);
 }
 
 .button-icon {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 .generate-description {
-  color: rgba(255, 255, 255, 0.9);
-  margin-top: 1rem;
-  font-size: 0.95rem;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin: 0;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-/* 시나리오 뷰 */
+/* Scenario View */
 .scenario-view {
   background: white;
-  border-radius: 16px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
 }
 
 .scenario-layout {
@@ -469,7 +451,7 @@ function handleSelectTestCase(item) {
 .scenario-sidebar {
   width: 280px;
   background: #f8fafc;
-  border-right: 1px solid #e2e8f0;
+  border-right: 1px solid #e5e7eb;
   padding: 1rem;
 }
 
@@ -488,47 +470,22 @@ function handleSelectTestCase(item) {
 }
 
 .empty-icon {
-  width: 4rem;
-  height: 4rem;
-  color: #a0aec0;
+  width: 3rem;
+  height: 3rem;
+  color: #9ca3af;
   margin-bottom: 1rem;
 }
 
 .empty-text {
-  font-size: 1.125rem;
-  color: #718096;
+  font-size: 1rem;
+  color: #6b7280;
   margin: 0;
 }
 
-/* 애니메이션 */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* 반응형 디자인 */
+/* Responsive Design */
 @media (max-width: 768px) {
   .generation-container {
     padding: 1rem;
-  }
-  
-  .header-content {
-    flex-direction: column;
-    text-align: center;
-  }
-  
-  .header-title {
-    font-size: 2rem;
-  }
-  
-  .files-card {
-    padding: 1.5rem;
   }
   
   .card-header {
@@ -538,7 +495,11 @@ function handleSelectTestCase(item) {
   }
   
   .file-item {
-    padding: 1rem;
+    padding: 0.75rem;
+  }
+  
+  .generate-section {
+    padding: 1.5rem;
   }
   
   .scenario-layout {
@@ -547,6 +508,26 @@ function handleSelectTestCase(item) {
   
   .scenario-sidebar {
     width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .files-grid {
+    padding: 1rem;
+  }
+  
+  .file-item {
+    gap: 0.75rem;
+  }
+  
+  .file-icon-wrapper {
+    width: 2rem;
+    height: 2rem;
+  }
+  
+  .file-icon-wrapper svg {
+    width: 1rem;
+    height: 1rem;
   }
 }
 </style>
