@@ -1,33 +1,148 @@
 <template>
   <aside
-    class="d-flex flex-column align-items-center bg-white border-end py-4"
-    style="
-      width: 80px;
-      height: 100vh;
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 1000;
-    "
+    class="sidebar"
   >
-
-
-    <RouterLink to="/" class="text-center text-muted small mb-4 text-decoration-none">
-        <div>🏠</div>
-        <div>Home</div>
-      </RouterLink>
-
-    <RouterLink to="/upload" class="text-center text-muted small mb-4 text-decoration-none">
-      <div>📁</div>
-      <div>Upload</div>
+    <RouterLink 
+      to="/" 
+      class="nav-item"
+      exact-active-class="active"
+    >
+      <div class="nav-icon">🏠</div>
+      <div class="nav-text">Home</div>
     </RouterLink>
-    <RouterLink to="/generation" class="text-center text-muted small mb-4 text-decoration-none">
-      <div>🌍</div>
-      <div>Generation</div>
+
+    <RouterLink 
+      to="/upload" 
+      class="nav-item"
+      active-class="active"
+    >
+      <div class="nav-icon">📁</div>
+      <div class="nav-text">Upload</div>
     </RouterLink>
-    <RouterLink to="/report" class="text-center text-muted small mb-4 text-decoration-none">
-      <div>🖥️</div>
-      <div>Report</div>
+
+    <RouterLink 
+      to="/generation" 
+      class="nav-item"
+      active-class="active"
+    >
+      <div class="nav-icon">🌍</div>
+      <div class="nav-text">Generation</div>
+    </RouterLink>
+
+    <RouterLink 
+      to="/report" 
+      class="nav-item"
+      active-class="active"
+    >
+      <div class="nav-icon">🖥️</div>
+      <div class="nav-text">Report</div>
     </RouterLink>
   </aside>
 </template>
+
+<style scoped>
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: white;
+  border-right: 1px solid #e5e7eb;
+  padding: 1rem 0;
+  width: 80px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: #6b7280;
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.nav-item:hover {
+  background: #f3f4f6;
+  color: #374151;
+  transform: translateY(-1px);
+}
+
+.nav-item.active {
+  background: #dbeafe;
+  color: #2563eb;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.1);
+}
+
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 24px;
+  background: #2563eb;
+  border-radius: 0 2px 2px 0;
+}
+
+.nav-icon {
+  font-size: 1.25rem;
+  margin-bottom: 0.25rem;
+  line-height: 1;
+}
+
+.nav-text {
+  line-height: 1;
+  text-align: center;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .sidebar {
+    bottom: 0;
+    top: auto;
+    width: 100%;
+    height: 70px;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 0.5rem;
+    border-right: none;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  .nav-item {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 0;
+  }
+
+  .nav-item.active::before {
+    left: 50%;
+    top: -12px;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 3px;
+    border-radius: 0 0 2px 2px;
+  }
+
+  .nav-icon {
+    font-size: 1rem;
+  }
+
+  .nav-text {
+    font-size: 0.6rem;
+  }
+}
+</style>
