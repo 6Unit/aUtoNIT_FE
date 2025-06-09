@@ -23,9 +23,9 @@
         <button
           class="btn btn-outline-secondary btn-sm"
           style="height: 40px; width: 100px"
-          @click="saveTitle"
+          @click="toggleEdit"
         >
-          Save
+          {{ isEditing ? "Save" : "Edit" }}
         </button>
       </div>
       <button
@@ -50,16 +50,39 @@
         <tbody class="text-center small">
           <tr>
             <td>{{ scenario.id }}</td>
-            <td>{{ scenario.name }}</td>
-            <td>{{ scenario.description || "-" }}</td>
+            <td>
+              <template v-if="isEditing">
+                <input
+                  v-model="editableName"
+                  class="form-control form-control-sm"
+                />
+              </template>
+              <template v-else>
+                {{ scenario.name }}
+              </template>
+            </td>
+            <td>
+              <template v-if="isEditing">
+                <input
+                  v-model="editableDesc"
+                  class="form-control form-control-sm"
+                />
+              </template>
+              <template v-else>
+                {{ scenario.description || "-" }}
+              </template>
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
 
     <!-- 테스트케이스 목록 테이블 -->
-    
-    <div v-if="props.shownMap && props.shownMap[props.scenario.id]" class="bg-white border rounded p-3 mt-4">
+
+    <div
+      v-if="props.shownMap && props.shownMap[props.scenario.id]"
+      class="bg-white border rounded p-3 mt-4"
+    >
       <div class="table-responsive">
         <h6 class="fw-semibold mb-3">테스트 케이스 목록</h6>
         <table class="table table-bordered table-sm align-middle">
@@ -94,6 +117,11 @@
         </table>
       </div>
     </div>
+    <div class="d-flex justify-content-end mt-3">
+      <button class="btn btn-success btn-md" @click="handleGenerateCode">
+        코드 생성
+      </button>
+    </div>
   </div>
 </template>
 
@@ -108,9 +136,13 @@ const props = defineProps({
 
 const emit = defineEmits(["run-scenario"]);
 
-const scenarioTitle = ref("");    // 시나리오 이름 수정용
-const checkedItems = ref([]);     // 선택된 테스트케이스 ID 배열
-const allChecked = ref(false);    // 전체 선택 여부
+const scenarioTitle = ref(""); // 시나리오 이름 수정용
+const checkedItems = ref([]); // 선택된 테스트케이스 ID 배열
+const allChecked = ref(false); // 전체 선택 여부
+
+const isEditing = ref(false); // 편집 모드 여부
+const editableName = ref(""); // 편집 중인 시나리오명
+const editableDesc = ref(""); // 편집 중인 상세설명
 
 // 시나리오 바뀌면 타이틀 및 체크 초기화
 watch(
@@ -146,4 +178,51 @@ watch(checkedItems, (newVal) => {
 function handleExecuteClick() {
   emit("run-scenario", props.scenario.id);
 }
+
+function toggleEdit() {
+  if (!isEditing.value) {
+    // 편집 시작
+    editableName.value = props.scenario.name;
+    editableDesc.value = props.scenario.description;
+    isEditing.value = true;
+  } else {
+    // 저장
+    props.scenario.name = editableName.value;
+    props.scenario.description = editableDesc.value;
+    scenarioTitle.value = editableName.value; // 상단 인풋창에도 반영
+    isEditing.value = false;
+  }
+}
+
+// ✅ 여기에 이 함수 추가
+async function handleGenerateCode() {
+  const selectedTestCases = props.scenario.testCases.filter(tc =>
+    checkedItems.value.includes(tc.id)
+  );
+
+  for (const tc of selectedTestCases) {
+    const code = await generateCodeForTestCase(tc);
+    tc.generatedCode = code;
+  }
+}
+
+// ✅ 그리고 아래 코드도 함께 추가
+async function generateCodeForTestCase(testCase) {
+  // 나중에 여기를 백엔드 API 호출로 바꾸면 됨
+  return {
+    yaml: `
+tests:
+  - name: ${testCase.name} 자동 생성 테스트
+    steps:
+      - action: click
+        selector: '#example'
+    expect:
+      - type: visible
+        selector: 'text=성공'
+    `,
+    ts: `// ${testCase.name} 테스트에 대한 TS 코드`
+  };
+}
+
+
 </script>

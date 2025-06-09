@@ -171,7 +171,8 @@ const scenarioList = ref([
   {
     id: 1,
     name: "회원가입 시나리오",
-    description: "사용자가 회원가입 폼을 작성하고 계정을 생성하는 전체 흐름을 검증합니다.",
+    description:
+      "사용자가 회원가입 폼을 작성하고 계정을 생성하는 전체 흐름을 검증합니다.",
     testCases: [
       { id: 1, name: "이메일 형식 확인",status: "pending" },
       { id: 2, name: "비밀번호 유효성 검사", status: "success" },
