@@ -18,6 +18,8 @@
           type="text"
           v-model="scenarioTitle"
           class="form-control"
+          :readonly="true"
+          @focus="$event.target.blur()"
           style="height: 40px; width: 800px"
         />
         <button
@@ -80,7 +82,7 @@
     <!-- 테스트케이스 목록 테이블 -->
 
     <div
-      v-if="props.shownMap && props.shownMap[props.scenario.id]"
+      v-if="isTestCaseVisible && props.shownMap && props.shownMap[props.scenario.id]"
       class="bg-white border rounded p-3 mt-4"
     >
       <div class="table-responsive">
@@ -117,7 +119,7 @@
         </table>
       </div>
     </div>
-    <div class="d-flex justify-content-end mt-3">
+    <div v-if="isTestCaseVisible" class="d-flex justify-content-end mt-3">
       <button class="btn btn-success btn-md" @click="handleGenerateCode">
         코드 생성
       </button>
@@ -143,6 +145,9 @@ const allChecked = ref(false); // 전체 선택 여부
 const isEditing = ref(false); // 편집 모드 여부
 const editableName = ref(""); // 편집 중인 시나리오명
 const editableDesc = ref(""); // 편집 중인 상세설명
+
+const isTestCaseVisible = ref(false); // 테스트메이스 생성 여부
+
 
 // 시나리오 바뀌면 타이틀 및 체크 초기화
 watch(
@@ -177,6 +182,7 @@ watch(checkedItems, (newVal) => {
 
 function handleExecuteClick() {
   emit("run-scenario", props.scenario.id);
+  isTestCaseVisible.value = true;
 }
 
 function toggleEdit() {
@@ -196,7 +202,7 @@ function toggleEdit() {
 
 // ✅ 여기에 이 함수 추가
 async function handleGenerateCode() {
-  const selectedTestCases = props.scenario.testCases.filter(tc =>
+  const selectedTestCases = props.scenario.testCases.filter((tc) =>
     checkedItems.value.includes(tc.id)
   );
 
@@ -220,9 +226,7 @@ tests:
       - type: visible
         selector: 'text=성공'
     `,
-    ts: `// ${testCase.name} 테스트에 대한 TS 코드`
+    ts: `// ${testCase.name} 테스트에 대한 TS 코드`,
   };
 }
-
-
 </script>
