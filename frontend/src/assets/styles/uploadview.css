@@ -1,7 +1,7 @@
 .upload-container {
   padding: 2rem;
   background-color: #f8fafc;
-  min-height: 100vh;
+  min-height: auto;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -471,7 +471,7 @@
   
   .action-buttons {
     flex-direction: column;
-    width: 100%;
+    width: 100%; 
   }
   
   .btn {

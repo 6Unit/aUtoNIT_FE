@@ -1,7 +1,7 @@
 .generation-container {
     padding: 0; /* 기존 2rem에서 0으로 변경 */
     background-color: #f8fafc;
-    min-height: 100vh;
+    min-height: auto;
   }
   
   .generation-form {
