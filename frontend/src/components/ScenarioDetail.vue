@@ -2,29 +2,34 @@
   <div class="mt-0">
     <!-- 시나리오 제목 수정 영역 -->
     <div class="d-flex align-items-center gap-2 mb-3">
-      <div class="d-flex align-items-center gap-2">
+      <div class="d-flex align-items-center gap-2 flex-grow-1">
         <span
-          class="badge fs-6 d-flex align-items-center justify-content-center"
+          class="badge d-flex align-items-center justify-content-center text-center"
           style="
             height: 40px;
-            width: 100px;
+            padding: 4px 12px;
             background-color: #b2eeb2;
             color: #1b5e20;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+            border-radius: 6px;
           "
+          :title="scenario.id"
         >
           {{ scenario.id }}
         </span>
         <input
           type="text"
           v-model="scenarioTitle"
-          class="form-control"
+          class="form-control flex-grow-1"
           :readonly="true"
           @focus="$event.target.blur()"
-          style="height: 40px; width: 800px"
+          style="height: 40px; min-width: 300px;"
         />
         <button
           class="btn btn-outline-secondary btn-sm"
-          style="height: 40px; width: 100px"
+          style="height: 40px; width: 80px; font-size: 12px;"
           @click="toggleEdit"
         >
           {{ isEditing ? "Save" : "Edit" }}
@@ -32,7 +37,7 @@
       </div>
       <button
         class="btn btn-primary btn-sm"
-        style="height: 40px; width: 100px"
+        style="height: 40px; width: 80px; font-size: 12px;"
         @click="handleExecuteClick"
       >
         실행
@@ -44,15 +49,17 @@
       <table class="table table-bordered table-sm align-middle mb-0">
         <thead class="table-light text-center small">
           <tr>
-            <th>ID</th>
-            <th>시나리오 명</th>
-            <th>상세설명(흐름도)</th>
+            <th style="width: auto; min-width: 100px;">ID</th>
+            <th style="width: 25%; min-width: 200px;">시나리오 명</th>
+            <th style="width: 60%;">상세설명(흐름도)</th>
           </tr>
         </thead>
         <tbody class="text-center small">
           <tr>
-            <td>{{ scenario.id }}</td>
-            <td>
+            <td style="white-space: nowrap; font-size: 11px; font-weight: 600; padding: 8px 12px;">
+              {{ scenario.id }}
+            </td>
+            <td style="text-align: left; padding: 8px;">
               <template v-if="isEditing">
                 <input
                   v-model="editableName"
@@ -60,18 +67,23 @@
                 />
               </template>
               <template v-else>
-                {{ scenario.name }}
+                <div style="word-break: break-word; line-height: 1.4;">
+                  {{ scenario.name }}
+                </div>
               </template>
             </td>
-            <td>
+            <td style="text-align: left; padding: 8px;">
               <template v-if="isEditing">
-                <input
+                <textarea
                   v-model="editableDesc"
                   class="form-control form-control-sm"
-                />
+                  rows="3"
+                ></textarea>
               </template>
               <template v-else>
-                {{ scenario.description || "-" }}
+                <div style="word-break: break-word; line-height: 1.4;">
+                  {{ scenario.description || "-" }}
+                </div>
               </template>
             </td>
           </tr>
