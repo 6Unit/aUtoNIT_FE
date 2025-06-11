@@ -81,7 +81,7 @@
       <div class="generate-section">
         <button @click="generateScenario" class="generate-button">
           <svg class="button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
           <span>시나리오 자동 생성</span>
         </button>
@@ -95,7 +95,7 @@
         <!-- 좌측 시나리오 트리 -->
         <div class="scenario-sidebar">
           <ScenarioList
-            :scenarioList="scenarioList"
+            :scenarioList="scenarios"
             :showTestCases="showTestCases"
             :runScenarioId="runScenarioId"
             :shownMap="shownTestCasesMap"
@@ -106,7 +106,7 @@
 
         <!-- 우측 상세 영역 -->
         <div class="scenario-content">
-          <TestDetail v-if="isTestPageActive" :scenarioList="scenarioList" @run-tests="handleRunTests" />
+          <TestDetail v-if="isTestPageActive" :scenarioList="scenarios" @run-tests="handleRunTests" />
           <TestCaseDetail v-else-if="selectedTestCase" :testCase="selectedTestCase" />
           <ScenarioDetail
             v-else-if="selectedScenario"
@@ -128,23 +128,47 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed, watch, nextTick } from 'vue'
 import ScenarioList from '../components/ScenarioList.vue';
 import TestCaseDetail from '../components/TestCaseDetail.vue';
 import ScenarioDetail from '../components/ScenarioDetail.vue';
 import TestDetail from '../components/TestDetail.vue'
 import '../assets/styles/generationview.css'
+// api 데이터
+import { useScenarioStore } from '../api/scenarioStore'
+import { useTestCaseStore } from '../api/testCaseStore'
 
 const isScenarioGenerated = ref(false)
 const showGenerationForm = ref(true)
-
 const lastUploadedFiles = ref(null)
 const currentUploadedFiles = ref({
   requirement: '요구사항정의서_최종.docx',
   source: 'frontend-backend.zip',
   validation: 'validation_data.json'
 })
+const selectedScenario = ref(null);
+const selectedTestCase = ref(null);
+const isTestPageActive = ref(false);
+const showTestCases = ref(false);
+const runScenarioId = ref(null);
+const shownTestCasesMap = ref({});
 
+const { scenarioList, loadScenarios } = useScenarioStore()
+const { setTestCases } = useTestCaseStore()
+
+// 🔥 핵심 수정: computed로 scenarios 생성하여 안전하게 사용
+const scenarios = computed(() => {
+  const list = scenarioList.value || []
+  console.log('💡 scenarios computed 실행됨, 길이:', list.length)
+  return list
+})
+
+// 🔥 추가: scenarioList 변경 감지 (디버깅용)
+watch(scenarioList, (newVal) => {
+  console.log('scenarioList 변경 감지됨, 길이:', newVal?.length || 0)
+}, { immediate: true, deep: true })
+
+// 파일이 다른지 확인하는 함수
 const filesAreDifferent = (newFiles, oldFiles) => {
   return (
     !oldFiles ||
@@ -154,82 +178,67 @@ const filesAreDifferent = (newFiles, oldFiles) => {
   )
 }
 
+// onMounted를 하나로 통합
 onMounted(() => {
+  console.log('📦 onMounted 실행됨')
+  
+  // 파일이 다르면 생성 폼 표시
   if (filesAreDifferent(currentUploadedFiles.value, lastUploadedFiles.value)) {
     isScenarioGenerated.value = false
     showGenerationForm.value = true
+    console.log('🔄 파일이 변경되어 생성 폼을 표시합니다')
+  }
+  
+  // 시나리오가 이미 생성되었다면 로드
+  if (isScenarioGenerated.value) {
+    loadScenarios()
+    console.log('✅ 시나리오 로드됨, 길이:', scenarios.value.length)
   }
 })
 
-const generateScenario = () => {
-  lastUploadedFiles.value = { ...currentUploadedFiles.value }
-  isScenarioGenerated.value = true
-  showGenerationForm.value = false
+const generateScenario = async () => {
+  console.log('🚀 시나리오 생성 시작')
+  
+  try {
+    // 파일 정보 저장
+    lastUploadedFiles.value = { ...currentUploadedFiles.value }
+    
+    // 시나리오 로드 실행
+    console.log('📡 loadScenarios 호출 시작')
+    await loadScenarios()
+    
+    // nextTick으로 DOM 업데이트 보장
+    await nextTick()
+    console.log('✅ 최종 scenarios 길이:', scenarios.value.length)
+    
+    // 로드 완료 후 상태 변경
+    if (scenarios.value.length > 0) {
+      isScenarioGenerated.value = true
+      showGenerationForm.value = false
+      console.log('✅ 화면 전환 완료')
+    } else {
+      console.error('❌ 시나리오 데이터가 비어있음')
+    }
+    
+  } catch (error) {
+    console.error('❌ 시나리오 생성 중 에러:', error)
+    isScenarioGenerated.value = false
+    showGenerationForm.value = true
+  }
 }
 
-const scenarioList = ref([
-  {
-    id: 1,
-    name: "회원가입 시나리오",
-    description:
-      "사용자가 회원가입 폼을 작성하고 계정을 생성하는 전체 흐름을 검증합니다.",
-    testCases: [
-      { id: 1, name: "이메일 형식 확인",status: "success" },
-      { id: 2, name: "비밀번호 유효성 검사", status: "success" },
-      { id: 3, name: "비밀번호 확인 일치 여부", status: "success"  },
-      { id: 4, name: "이름 입력 확인",status: "success"  },
-      { id: 5, name: "휴대폰 번호 형식 검사", status: "success" },
-      { id: 6, name: "생년월일 입력 유효성", status: "success"   },
-      { id: 7, name: "약관 동의 체크 여부",status: "success"  },
-      { id: 8, name: "회원가입 완료 후 리다이렉트", status: "success" },
-    ],
-  },
-  {
-    id: 2,
-    name: "로그인 시나리오",
-    description: "등록된 사용자 정보를 기반으로 로그인 기능을 검증합니다.",
-    testCases: [
-      { id: 1, name: "정상 로그인", status: "pending"   },
-      { id: 2, name: "비밀번호 오류로 인한 실패",status: "pending"  },
-      { id: 3, name: "이메일 미입력 시도", status: "success" },
-      { id: 4, name: "비밀번호 미입력 시도", status: "pending"   },
-      { id: 5, name: "이메일 형식 오류 처리",status: "pending"  },
-      { id: 6, name: "로그인 후 메인 페이지 진입", status: "success" },
-      { id: 7, name: "비밀번호 특수문자 미입력", status: "success"   },
-      { id: 8, name: "비밀번호 보기 토글 동작",status: "pending"  },
-    ],
-  },
-  {
-    id: 3,
-    name: "프로필 수정 시나리오",
-    description: "사용자가 프로필 정보를 수정하고 저장하는 기능을 확인합니다.",
-    testCases: [
-      { id: 1, name: "이름 수정", status: "success" },
-      { id: 2, name: "프로필 이미지 변경", status: "pending"   },
-      { id: 3, name: "전화번호 입력 유효성",status: "pending"  },
-      { id: 4, name: "주소 입력 및 저장", status: "success" },
-      { id: 5, name: "비밀번호 변경 시도", status: "pending"   },
-      { id: 6, name: "입력 미완성 시 저장 불가",status: "pending"  },
-      { id: 7, name: "취소 버튼 동작 확인", status: "success" },
-      { id: 8, name: "수정 완료 후 알림 표시", status: "failed"},
-    ],
-  },
-])
-
-const selectedScenario = ref(null);
-const selectedTestCase = ref(null);
-const isTestPageActive = ref(false);
-const showTestCases = ref(false);
-const runScenarioId = ref(null);
-const shownTestCasesMap = ref({});
-
+const handleSelectScenario = (scenario) => {
+  selectedScenario.value = scenario
+}
 
 function handleSelectTestCase(item) {
+  console.log('🎯 아이템 선택됨:', item)
+  
   if (item.type === 'testPage') {
     selectedScenario.value = null;
     selectedTestCase.value = null;
     isTestPageActive.value = true;
-  } else if ("testCases" in item) {
+  } else if (item && "testCases" in item) {
     selectedScenario.value = item;
     selectedTestCase.value = null;
     isTestPageActive.value = false;
@@ -242,6 +251,7 @@ function handleSelectTestCase(item) {
 
 // 좌측 리스트 다 보이고, 우측 목록도 함께 보임
 function handleRunAllScenarios() {
+  console.log('🚀 전체 시나리오 실행')
   // 모든 시나리오 id에 대해 shownMap[id] = true 설정
   scenarioList.value.forEach((scenario) => {
     shownTestCasesMap.value[scenario.id] = true;  // 좌측 시나리오 리스트 모두 펼치기
@@ -252,9 +262,44 @@ function handleRunAllScenarios() {
   }
 }
 
-function handleRunScenario(id) {
-  shownTestCasesMap.value[id] = true;
-  runScenarioId.value = id;
+// ✅ 시나리오 개별 실행 및 테스트케이스 생성
+async function handleRunScenario(id) {
+  console.log('🎯 개별 시나리오 실행:', id)
+  
+  try {
+    const testCases = await generateTestCasesFromAI(id)
+    setTestCases(id, testCases)
+    shownTestCasesMap.value[id] = true
+    runScenarioId.value = id
+    showTestCases.value = true
+    
+    console.log('✅ 테스트케이스 생성 완료:', testCases)
+  } catch (error) {
+    console.error('❌ 테스트케이스 생성 중 에러:', error)
+  }
+}
+
+// ✅ 테스트케이스 생성 모의 함수
+async function generateTestCasesFromAI(scenarioId) {
+  console.log('🤖 AI 테스트케이스 생성 시작:', scenarioId)
+  
+  // 시뮬레이션 지연
+  await new Promise(resolve => setTimeout(resolve, 1000))
+  
+  return [
+    {
+      id: `${scenarioId}-1`,
+      name: '이메일 형식 확인',
+      preCall: '회원가입 페이지 진입 → 이메일 입력',
+      status: 'pending'
+    },
+    {
+      id: `${scenarioId}-2`,
+      name: '비밀번호 길이 체크',
+      preCall: '비밀번호에 5자리 입력',
+      status: 'pending'
+    }
+  ]
 }
 
 function handleRunTests(testcases) {
