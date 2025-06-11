@@ -101,6 +101,7 @@
             :shownMap="shownTestCasesMap"
             @select="handleSelectTestCase"
             @generate="handleRunAllScenarios"
+            @add-scenario="handleAddScenario"
           />
         </div>
 
@@ -124,6 +125,13 @@
         </div>
       </div>
     </div>
+    
+    <!-- 시나리오 추가 모달 -->
+    <AddScenarioModal 
+      :show="showAddScenarioModal" 
+      @close="showAddScenarioModal = false"
+      @submit="handleSubmitNewScenario"
+    />
   </div>
 </template>
 
@@ -133,6 +141,7 @@ import ScenarioList from '../components/ScenarioList.vue';
 import TestCaseDetail from '../components/TestCaseDetail.vue';
 import ScenarioDetail from '../components/ScenarioDetail.vue';
 import TestDetail from '../components/TestDetail.vue'
+import AddScenarioModal from '../components/AddScenarioMadal.vue'
 import '../assets/styles/generationview.css'
 // api 데이터
 import { useScenarioStore } from '../api/scenarioStore'
@@ -152,11 +161,11 @@ const isTestPageActive = ref(false);
 const showTestCases = ref(false);
 const runScenarioId = ref(null);
 const shownTestCasesMap = ref({});
+const showAddScenarioModal = ref(false); // 시나리오 추가 모달 표시 여부
 
-const { scenarioList, loadScenarios } = useScenarioStore()
+const { scenarioList, loadScenarios, generateNewScenarios, addCustomScenario } = useScenarioStore()
 const { setTestCases } = useTestCaseStore()
 
-// 🔥 핵심 수정: computed로 scenarios 생성하여 안전하게 사용
 const scenarios = computed(() => {
   const list = scenarioList.value || []
   console.log('💡 scenarios computed 실행됨, 길이:', list.length)
@@ -165,7 +174,7 @@ const scenarios = computed(() => {
 
 // 🔥 추가: scenarioList 변경 감지 (디버깅용)
 watch(scenarioList, (newVal) => {
-  console.log('scenarioList 변경 감지됨, 길이:', newVal?.length || 0)
+  console.log('👀 scenarioList 변경 감지됨, 길이:', newVal?.length || 0)
 }, { immediate: true, deep: true })
 
 // 파일이 다른지 확인하는 함수
@@ -182,36 +191,29 @@ const filesAreDifferent = (newFiles, oldFiles) => {
 onMounted(() => {
   console.log('📦 onMounted 실행됨')
   
-  // 파일이 다르면 생성 폼 표시
-  if (filesAreDifferent(currentUploadedFiles.value, lastUploadedFiles.value)) {
-    isScenarioGenerated.value = false
-    showGenerationForm.value = true
-    console.log('🔄 파일이 변경되어 생성 폼을 표시합니다')
-  }
-  
-  // 시나리오가 이미 생성되었다면 로드
-  if (isScenarioGenerated.value) {
-    loadScenarios()
-    console.log('✅ 시나리오 로드됨, 길이:', scenarios.value.length)
-  }
+  // 처음에는 항상 생성 폼을 보여줌
+  isScenarioGenerated.value = false
+  showGenerationForm.value = true
+  console.log('🔄 시나리오 생성 폼을 표시합니다')
 })
 
 const generateScenario = async () => {
   console.log('🚀 시나리오 생성 시작')
   
   try {
-    // 파일 정보 저장
-    lastUploadedFiles.value = { ...currentUploadedFiles.value }
+    // 1️⃣ AI가 파일을 분석해서 시나리오 생성 (백엔드 API 호출)
+    console.log('🤖 AI 시나리오 생성 요청 중...')
+    await generateNewScenarios(currentUploadedFiles.value)
     
-    // 시나리오 로드 실행
-    console.log('📡 loadScenarios 호출 시작')
+    // 2️⃣ 생성된 시나리오를 백엔드에서 가져오기
+    console.log('📡 생성된 시나리오 로드 중...')
     await loadScenarios()
     
-    // nextTick으로 DOM 업데이트 보장
+    // 3️⃣ DOM 업데이트 보장
     await nextTick()
     console.log('✅ 최종 scenarios 길이:', scenarios.value.length)
     
-    // 로드 완료 후 상태 변경
+    // 4️⃣ 화면 전환
     if (scenarios.value.length > 0) {
       isScenarioGenerated.value = true
       showGenerationForm.value = false
@@ -305,5 +307,30 @@ async function generateTestCasesFromAI(scenarioId) {
 function handleRunTests(testcases) {
   console.log("✅ 선택된 테스트케이스 실행:", testcases)
   // 여기서 API 호출 등 처리 예정
+}
+
+// ✅ 시나리오 추가 모달 열기
+function handleAddScenario() {
+  console.log('➕ 시나리오 추가 모달 열기')
+  showAddScenarioModal.value = true
+}
+
+// ✅ 새 시나리오 제출 처리
+async function handleSubmitNewScenario(scenarioData) {
+  console.log('📝 새 시나리오 제출:', scenarioData)
+  
+  try {
+    const newScenario = await addCustomScenario(scenarioData)
+    console.log('✅ 새 시나리오 추가 완료:', newScenario)
+    
+    // 새로 추가된 시나리오를 자동으로 선택
+    selectedScenario.value = newScenario
+    selectedTestCase.value = null
+    isTestPageActive.value = false
+    
+  } catch (error) {
+    console.error('❌ 시나리오 추가 중 에러:', error)
+    // 여기서 에러 토스트나 알림을 표시할 수 있음
+  }
 }
 </script>
