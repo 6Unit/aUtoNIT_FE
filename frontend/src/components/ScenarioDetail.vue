@@ -80,7 +80,6 @@
     </div>
 
     <!-- 테스트케이스 목록 테이블 -->
-
     <div
       v-if="isTestCaseVisible && props.shownMap && props.shownMap[props.scenario.id]"
       class="bg-white border rounded p-3 mt-4"
@@ -136,7 +135,7 @@ const props = defineProps({
   shownMap: Object,
 });
 
-const emit = defineEmits(["run-scenario"]);
+const emit = defineEmits(["run-scenario", "update-scenario"]);
 
 const scenarioTitle = ref(""); // 시나리오 이름 수정용
 const checkedItems = ref([]); // 선택된 테스트케이스 ID 배열
@@ -147,7 +146,6 @@ const editableName = ref(""); // 편집 중인 시나리오명
 const editableDesc = ref(""); // 편집 중인 상세설명
 
 const isTestCaseVisible = ref(false); // 테스트메이스 생성 여부
-
 
 // 시나리오 바뀌면 타이틀 및 체크 초기화
 watch(
@@ -191,11 +189,24 @@ function toggleEdit() {
     editableName.value = props.scenario.name;
     editableDesc.value = props.scenario.description;
     isEditing.value = true;
+    console.log('✏️ 편집 모드 시작');
   } else {
-    // 저장
+    // 저장 - API 통신으로 수정
+    const updatedData = {
+      name: editableName.value,
+      description: editableDesc.value
+    };
+    
+    console.log('✏️ 시나리오 수정 요청:', props.scenario.id, updatedData);
+    
+    // 부모 컴포넌트에 수정 요청 emit
+    emit("update-scenario", props.scenario.id, updatedData);
+    
+    // 로컬 상태는 일단 업데이트 (낙관적 업데이트)
     props.scenario.name = editableName.value;
     props.scenario.description = editableDesc.value;
     scenarioTitle.value = editableName.value; // 상단 인풋창에도 반영
+    
     isEditing.value = false;
   }
 }
