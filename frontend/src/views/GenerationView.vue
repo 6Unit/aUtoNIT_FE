@@ -244,7 +244,7 @@ function handleSelectTestCase(item) {
 function handleRunAllScenarios() {
   // 모든 시나리오 id에 대해 shownMap[id] = true 설정
   scenarioList.value.forEach((scenario) => {
-    shownTestCasesMap.value[scenario.id] = true;
+    shownTestCasesMap.value[scenario.id] = true;  // 좌측 시나리오 리스트 모두 펼치기
   });
   // 우측 상세 뷰가 시나리오일 경우, 그 안의 테스트케이스도 보이게 함
   if (selectedScenario.value) {
