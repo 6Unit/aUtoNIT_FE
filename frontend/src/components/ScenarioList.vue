@@ -62,18 +62,27 @@ import { ref, watch } from "vue";
 
 // 시나리오 목록 배열, 오른쪽 상세페이지에서 테그스케이스 리스트 보일지 여부
 // 실행중인 시나리오 ID, 시나리오별 테스트케이스 표시 여부 map {1: true, 2:false}
-const props = defineProps([
-  "scenarioList",
-  "showTestCases",
-  "runScenarioId",
-  "shownMap",
-]);
+const props = defineProps({
+  scenarioList: {
+    type: Array,
+    required: true,   
+    default: () => []      
+  },
+  showTestCases: Boolean,
+  runScenarioId: String,
+  shownMap: Object
+});
+
+console.log("✅ 전달받은 scenarioList:", props.scenarioList)
+
+
 const emit = defineEmits(["select", "generate"]);
 
 const expanded = ref([]);
 const selectedId = ref(null);
 
 function generateAllTestCases() {
+  console.log('🚀 전체 테스트케이스 생성 요청');
   emit("generate"); // 부모에게 알려주기만 함
 }
 
