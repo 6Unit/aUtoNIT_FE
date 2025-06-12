@@ -6,7 +6,7 @@
         class="badge fs-6 d-flex align-items-center justify-content-center"
         style="
           height: 40px;
-          width: 100px;
+          width: 140px;
           background-color: #b2eeb2;
           color: #1b5e20;
         "
@@ -20,7 +20,13 @@
         v-model="scenarioTitle"
         :readonly="!isEditing"
         class="form-control form-control-sm"
-        style="height: 40px; max-width: 800px; flex-grow: 1; box-shadow: none; outline: none;"
+        style="
+          height: 40px;
+          max-width: 800px;
+          flex-grow: 1;
+          box-shadow: none;
+          outline: none;
+        "
         @focus="!isEditing && $event.target.blur()"
       />
 
@@ -44,16 +50,16 @@
 
     <!-- 테이블 -->
     <div class="table-responsive mb-4">
-      <table class="table table-bordered table-sm align-middle mb-0">
+      <table class="table table-bordered table-sm align-middle mb-2">
         <thead class="table-light text-center small">
-          <tr>
-            <th>ID</th>
-            <th>테스트케이스 명</th>
-            <th>테스트케이스 사전 흐름</th>
-            <th>입력데이터</th>
-            <th>예상결과</th>
-            <th>수행결과</th>
-            <th>성공 여부</th>
+          <tr >
+            <th style="width: 4%">ID</th>
+            <th style="width: 12%">테스트케이스 명</th>
+            <th style="width: 30%">UI 흐름</th>
+            <th style="width: 20%">입력데이터</th>
+            <th style="width: 20%">예상결과</th>
+            <th style="width: 7%">수행결과</th>
+            <th style="width: 7%">성공 여부</th>
           </tr>
         </thead>
         <tbody>
@@ -158,7 +164,7 @@
           <button
             class="btn btn-outline-secondary btn-sm"
             @click="toggleCodeEdit"
-            style="min-width: 60px;"
+            style="min-width: 60px"
           >
             {{ isCodeEditing ? "Save" : "Edit" }}
           </button>
@@ -237,13 +243,6 @@ watch(
   },
   { immediate: true }
 );
-
-// Save 클릭 시 testCase.name 값 반영
-function saveTitle() {
-  if (props.testCase) {
-    props.testCase.name = scenarioTitle.value;
-  }
-}
 
 function toggleEdit() {
   if (!isEditing.value) {
