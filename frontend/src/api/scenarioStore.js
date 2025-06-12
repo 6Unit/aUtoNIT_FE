@@ -12,21 +12,21 @@ export function useScenarioStore() {
     
     try {
       // SpringBoot API 호출 - AI가 파일을 분석해서 시나리오 생성
-      /*
-      const formData = new FormData()
-      formData.append('requirement', files.requirement)
-      formData.append('source', files.source)  
-      formData.append('validation', files.validation)
       
-      const response = await axios.post('/api/scenarios/generate', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      })
+      // const formData = new FormData()
+      // formData.append('requirement', files.requirement)
+      // formData.append('source', files.source)  
+      // formData.append('validation', files.validation)
       
-      console.log("✅ AI 시나리오 생성 API 호출 완료")
-      return response.data
-      */
+      // const response = await axios.post('/api/scenarios/generate', formData, {
+      //   headers: {
+      //     'Content-Type': 'multipart/form-data'
+      //   }
+      // })
+      
+      // console.log("✅ AI 시나리오 생성 API 호출 완료")
+      // return response.data
+      
       
       console.log("✅ AI 시나리오 생성 완료 (백엔드에 저장됨)")
       return true

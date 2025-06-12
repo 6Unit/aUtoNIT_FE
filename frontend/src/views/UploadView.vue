@@ -9,12 +9,10 @@
     <!-- Upload Grid -->
     <div class="upload-grid">
       <!-- Requirements Upload -->
-      <div class="upload-card">
+      <div class="upload-card requirements">
         <div class="card-header">
           <div class="card-icon requirements">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-            </svg>
+            <img src="../assets/icons/requirements.png" alt="요구사항 아이콘" />
           </div>
           <div class="card-title">
             <h3>요구사항 명세서</h3>
@@ -47,12 +45,13 @@
                 <span class="file-size">{{ formatFileSize(files.requirements.size) }}</span>
               </div>
             </div>
-            <button class="remove-btn" @click.stop="removeFile('requirements')">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-              </svg>
-            </button>
           </div>
+          
+          <button v-if="files.requirements" class="remove-btn" @click.stop="removeFile('requirements')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
         </div>
         
         <input 
@@ -65,12 +64,10 @@
       </div>
 
       <!-- Source File Upload -->
-      <div class="upload-card">
+      <div class="upload-card source">
         <div class="card-header">
           <div class="card-icon source">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
-            </svg>
+            <img src="../assets/icons/sourcecode.png" alt="소스코드 아이콘" />
           </div>
           <div class="card-title">
             <h3>소스코드</h3>
@@ -103,12 +100,13 @@
                 <span class="file-size">{{ formatFileSize(files.source.size) }}</span>
               </div>
             </div>
-            <button class="remove-btn" @click.stop="removeFile('source')">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-              </svg>
-            </button>
           </div>
+          
+          <button v-if="files.source" class="remove-btn" @click.stop="removeFile('source')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
         </div>
         
         <input 
@@ -121,12 +119,10 @@
       </div>
 
       <!-- Validation File Upload -->
-      <div class="upload-card">
+      <div class="upload-card validation">
         <div class="card-header">
           <div class="card-icon validation">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-            </svg>
+            <img src="../assets/icons/validation3.png" alt="검증 아이콘" />
           </div>
           <div class="card-title">
             <h3>검증 데이터</h3>
@@ -159,12 +155,13 @@
                 <span class="file-size">{{ formatFileSize(files.validation.size) }}</span>
               </div>
             </div>
-            <button class="remove-btn" @click.stop="removeFile('validation')">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-              </svg>
-            </button>
           </div>
+          
+          <button v-if="files.validation" class="remove-btn" @click.stop="removeFile('validation')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
         </div>
         
         <input 
