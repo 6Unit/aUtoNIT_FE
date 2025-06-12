@@ -12,23 +12,22 @@ export function useScenarioStore() {
     
     try {
       // SpringBoot API 호출 - AI가 파일을 분석해서 시나리오 생성
-      /*
-      const formData = new FormData()
-      formData.append('requirement', files.requirement)
-      formData.append('source', files.source)  
-      formData.append('validation', files.validation)
       
-      const response = await axios.post('/api/scenarios/generate', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      })
+      // const formData = new FormData()
+      // formData.append('requirement', files.requirement)
+      // formData.append('source', files.source)  
+      // formData.append('validation', files.validation)
       
-      console.log("✅ AI 시나리오 생성 API 호출 완료")
-      return response.data
-      */
-
-      // 현재는 AI 시나리오 생성 시뮬레이션 (3초 지연)
+      // const response = await axios.post('/api/scenarios/generate', formData, {
+      //   headers: {
+      //     'Content-Type': 'multipart/form-data'
+      //   }
+      // })
+      
+      // console.log("✅ AI 시나리오 생성 API 호출 완료")
+      // return response.data
+      
+      
       console.log("✅ AI 시나리오 생성 완료 (백엔드에 저장됨)")
       return true
       
@@ -184,10 +183,53 @@ export function useScenarioStore() {
     return scenarios
   }
 
+  // 시나리오 수정 기능 추가
+  async function updateScenario(scenarioId, updatedData) {
+    console.log("✏️ updateScenario() 실행됨 - ID:", scenarioId, "데이터:", updatedData)
+    
+    try {
+      // SpringBoot API 호출 (시나리오 수정)
+      /*
+      const response = await axios.put(`/api/scenarios/${scenarioId}`, updatedData)
+      const updatedScenario = response.data
+      
+      // 로컬 상태에서도 업데이트
+      const index = scenarioList.value.findIndex(s => s.id === scenarioId)
+      if (index !== -1) {
+        scenarioList.value[index] = updatedScenario
+      }
+      
+      console.log("✅ 시나리오 수정 완료:", updatedScenario)
+      return updatedScenario
+      */
+
+      // 현재는 더미데이터 - 로컬에서만 수정
+      const scenario = scenarioList.value.find(s => s.id === scenarioId)
+      if (scenario) {
+        // 기존 데이터 유지하면서 업데이트
+        Object.assign(scenario, {
+          name: updatedData.name,
+          description: updatedData.description,
+          updatedAt: new Date().toISOString() // 수정 시간 추가
+        })
+        
+        console.log("✅ 시나리오 수정 완료 (로컬):", scenario)
+        return scenario
+      } else {
+        throw new Error(`시나리오를 찾을 수 없습니다: ${scenarioId}`)
+      }
+      
+    } catch (error) {
+      console.error('❌ 시나리오 수정 실패:', error)
+      throw error
+    }
+  }
+
   return {
     scenarioList,
     loadScenarios,        // 백엔드에서 시나리오 가져오기
     generateNewScenarios, // AI가 시나리오 생성하기
     addCustomScenario,    // 사용자 정의 시나리오 추가
+    updateScenario,       // 시나리오 수정
   }
 }
