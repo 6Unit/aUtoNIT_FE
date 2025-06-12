@@ -431,6 +431,24 @@ async function handleSubmitNewScenario(scenarioData) {
   }
 }
 
+// ✅ 시나리오 수정 처리
+async function handleUpdateScenario(scenarioId, updatedData) {
+  console.log('✏️ 시나리오 수정 요청:', scenarioId, updatedData)
+  
+  try {
+    const updatedScenario = await updateScenario(scenarioId, updatedData)
+    console.log('✅ 시나리오 수정 완료:', updatedScenario)
+    
+    // 현재 선택된 시나리오가 수정된 시나리오라면 업데이트
+    if (selectedScenario.value && selectedScenario.value.id === scenarioId) {
+      selectedScenario.value = updatedScenario
+    }
+    
+  } catch (error) {
+    console.error('❌ 시나리오 수정 중 에러:', error)
+    // 여기서 에러 토스트나 알림을 표시할 수 있음
+  }
+}
 
 async function handleGenerateAllTestCases() {
   const generated = await generateAllTestCasesByAI(scenarioList.value);
@@ -439,5 +457,4 @@ async function handleGenerateAllTestCases() {
   });
   console.log("✅ 전체 테스트케이스 생성 완료:", generated.length);
 }
-
 </script>
