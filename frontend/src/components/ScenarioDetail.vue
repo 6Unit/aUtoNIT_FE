@@ -82,7 +82,9 @@
     <!-- 테스트케이스 목록 테이블 -->
 
     <div
-      v-if="isTestCaseVisible && props.shownMap && props.shownMap[props.scenario.id]"
+      v-if="
+        isTestCaseVisible
+      "
       class="bg-white border rounded p-3 mt-4"
     >
       <div class="table-responsive">
@@ -97,9 +99,9 @@
                   @change="toggleAll"
                 />
               </th>
-              <th style="width: 60px">ID</th>
+              <th style="width: 140px">ID</th>
               <th class="w-25">테스트케이스 명</th>
-              <th>테스트케이스 사전 흐름</th>
+              <th>UI 흐름</th>
             </tr>
           </thead>
           <tbody>
@@ -129,6 +131,10 @@
 
 <script setup>
 import { ref, watch } from "vue";
+import { useTestCaseStore } from "../api/testCaseStore";
+
+const { generateTestCasesByAI, setTestCases, getTestCases } = useTestCaseStore();
+
 
 const props = defineProps({
   scenario: Object,
@@ -148,14 +154,19 @@ const editableDesc = ref(""); // 편집 중인 상세설명
 
 const isTestCaseVisible = ref(false); // 테스트메이스 생성 여부
 
-
 // 시나리오 바뀌면 타이틀 및 체크 초기화
 watch(
   () => props.scenario,
   (newVal) => {
     scenarioTitle.value = newVal?.name ?? "";
     checkedItems.value = [];
+    isTestCaseVisible.value = false;
+
+    // ✅ 실행 버튼 안 눌러도, 테스트케이스가 있으면 표시
+    isTestCaseVisible.value =
+      Array.isArray(newVal?.testCases) && newVal.testCases.length > 0;
   },
+
   { immediate: true }
 );
 
@@ -180,10 +191,15 @@ watch(checkedItems, (newVal) => {
   allChecked.value = newVal.length === total && total > 0;
 });
 
-function handleExecuteClick() {
+
+async function handleExecuteClick() {
+  const origin = getTestCases(props.scenario.id); 
+  const generated = await generateTestCasesByAI(origin); 
+  setTestCases(props.scenario.id, generated); 
   emit("run-scenario", props.scenario.id);
   isTestCaseVisible.value = true;
 }
+
 
 function toggleEdit() {
   if (!isEditing.value) {
