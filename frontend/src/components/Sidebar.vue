@@ -1,7 +1,7 @@
 <template>
   <aside class="sidebar">
     <RouterLink 
-      to="/" 
+      to="/home" 
       class="nav-item"
       exact-active-class="active"
     >
@@ -54,10 +54,15 @@
       </div>
       <div class="nav-text">Report</div>
     </RouterLink>
+
+    <div class="logout-section">
+      <button class="logout-button" @click="logout">로그아웃</button>
+    </div>
   </aside>
 </template>
 
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 import '../assets/styles/sidebar.css'
 
 // 이미지 파일들을 import
@@ -66,12 +71,18 @@ import uploadIcon from '../assets/icons/upload.png'
 import generationIcon from '../assets/icons/generation.png'
 import testpageIcon from '../assets/icons/testpage.png'
 import reportIcon from '../assets/icons/report.png'
+
+const router = useRouter()
+
+function logout() {
+  router.push('/')
+}
 </script>
 
 <style scoped>
 .icon-image {
-  width: 24px;
-  height: 24px;
+  width: 28px;  /* 24px → 28px로 변경 */
+  height: 28px; /* 24px → 28px로 변경 */
   object-fit: contain;
 }
 

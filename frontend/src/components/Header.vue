@@ -7,9 +7,12 @@
   </template>
   
   <script setup>
-  import { ref } from 'vue'
+  import { ref, onMounted } from 'vue'
+  const projectName = ref('')
+
+  onMounted(() => {
+    projectName.value = localStorage.getItem('projectName') || '프로젝트 이름 없음'
+  })
   
-  // 페이지마다 변경
-  const projectName = ref('프로젝트 1')
   </script>
   

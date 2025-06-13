@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import LoginView from '../views/LoginView.vue'
 import HomeView from '../views/HomeView.vue'
 import GenerationView from '../views/GenerationView.vue'
 import UploadView from '../views/UploadView.vue'
@@ -6,7 +7,8 @@ import ReportView from '../views/ReportView.vue'
 import TestPageView from '../views/TestPageView.vue'
 
 const routes = [
-    { path: '/', name: 'Home', component: HomeView },
+    { path: '/', name: 'Login', component: LoginView },
+    { path: '/home', name: 'Home', component: HomeView },
     { path: '/upload', name: 'Upload', component: UploadView },
     { path: '/generation', name: 'Generation', component: GenerationView },
     { path: '/testpage', name: 'TestPage', component: TestPageView },
